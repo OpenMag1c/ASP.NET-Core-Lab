@@ -82,18 +82,11 @@ namespace WebApp1
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
 
             app.Run(async (context) =>
             {
-                IMessageSender messSender1 = context.RequestServices.GetService<IMessageSender>();
-                IMessageSender messSender2 = app.ApplicationServices.GetService<IMessageSender>();
-                context.Response.ContentType = "text/html; charset=utf-8";
-                await context.Response.WriteAsync(senderController.GetInfo());
-                await context.Response.WriteAsync(messageSender.GetInfo());
-                await context.Response.WriteAsync(messSender1.GetInfo());
-                await context.Response.WriteAsync(messSender2.GetInfo());
                 app.UseMiddleware<MessageMiddleware>();
             });
 
