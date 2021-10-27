@@ -1,24 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApp1.Controllers
 {
+    [Route("api/HomeController/")]
     public class HomeController : ControllerBase
     {
+        private IUserService _userService;
 
-        public HomeController()
+        public HomeController(IUserService userService)
         {
+            _userService = userService;
         }
 
-        [HttpGet]
-        [Route("Controllers/HomeController")]
+        [HttpGet("GetInfo")]
         public string GetInfo()
         {
-            return "Hello World!";
+            return _userService.GetUserByName("");
         }
     }  
 }
