@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
+using Business.DTO;
 using Business.Infrastructure;
 using Business.Interfaces;
-using DAL.DTO;
 using DAL.Models;
 using DAL.Repository;
 
@@ -10,30 +11,30 @@ namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private IRepository<User> _repo;
+        private readonly IRepository<User> _repo;
 
         public UserService(IRepository<User> repo)
         {
             _repo = repo;
         }
 
-        public IEnumerable<UserDTO> GetAllUsers()
+        public IEnumerable<UserDto> GetAllUsers()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<User>, List<UserDTO>>(_repo.GetAll());
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDto>()).CreateMapper();
+            return mapper.Map<IEnumerable<User>, List<UserDto>>(_repo.GetAll());
         }
 
-        public UserDTO GetUserById(int? id)
+        public UserDto GetUserById(int? id)
         {
             if (id == null)
                 throw new ValidationException("Не установлено id пользователя", "");
             var user = _repo.Get(id.Value);
             if (user == null)
                 throw new ValidationException("Пользователь не найден", "");
-            return new UserDTO() {Age = user.Age, Name = user.Name, Id = user.Id};
+            return new UserDto() {Age = user.Age, Name = user.Name, Id = user.Id};
         }
 
-        public void AddUser(UserDTO userDto)
+        public void AddUser(UserDto userDto)
         {
             var user = new User
             {
@@ -43,11 +44,6 @@ namespace Business.Services
             };
             
             _repo.Create(user);
-        }
-
-        public void Dispose()
-        {
-            _repo.Dispose();
         }
     }
 }

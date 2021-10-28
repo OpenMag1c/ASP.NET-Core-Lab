@@ -1,8 +1,10 @@
+using System.IO;
 using Business.Interfaces;
 using Business.Services;
+using DAL.Database;
 using DAL.Models;
+using DAL.Repositories;
 using DAL.Repository;
-using DAL.UserContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace WebApp1
+namespace WebAPI
 {
     public class Startup
     {
@@ -25,9 +27,16 @@ namespace WebApp1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var config = builder.Build();
+            string connectionString = config.GetConnectionString("DefaultConnection");
+
             // устанавливаем контекст данных
-            services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            //HealthCheck
+            services.AddHealthChecks(); 
 
             services.AddControllers();
             services.AddScoped<IUserService, UserService>();
@@ -57,6 +66,7 @@ namespace WebApp1
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc");
             });
         }
     }

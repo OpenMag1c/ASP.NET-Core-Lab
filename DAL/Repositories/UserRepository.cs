@@ -1,57 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DAL.Database;
 using DAL.Models;
-using DAL.UserContext;
+using DAL.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Repository
+namespace DAL.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IRepository<User>, IDisposable
     {
-        private UserDbContext db;
+        private readonly ApplicationDbContext _db;
 
-        public UserRepository(UserDbContext context)
+        public UserRepository(ApplicationDbContext context)
         {
-            this.db = context;
+            this._db = context;
         }
 
         public IEnumerable<User> GetAll()
         {
-            return db.Users;
+            return _db.Users;
         }
 
         public User Get(int id)
         {
-            return db.Users.Find(id);
+            return _db.Users.Find(id);
         }
 
         public IEnumerable<User> Find(Func<User, bool> predicate)
         {
-            return db.Users.Where(predicate).ToList();
+            return _db.Users.Where(predicate).ToList();
         }
 
         public void Create(User item)
         {
-            db.Users.Add(item);
-            db.SaveChanges();
+            _db.Users.Add(item);
+            _db.SaveChanges();
         }
 
         public void Update(User item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            var book = db.Users.Find(id);
+            var book = _db.Users.Find(id);
             if (book != null)
-                db.Users.Remove(book);
+                _db.Users.Remove(book);
         }
 
         public void Dispose()
         {
-            db.Dispose();
+            _db?.Dispose();
         }
     }
 }

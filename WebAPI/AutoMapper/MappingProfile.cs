@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using DAL.DTO;
+using Business.DTO;
 using DAL.Models;
 
-namespace WebApp1
+namespace WebAPI.AutoMapper
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDTO>();
-            CreateMap<UserDTO, User>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace DAL.DTO
+﻿namespace Business.DTO
 {
-    public class UserDTO
+    public class UserDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
