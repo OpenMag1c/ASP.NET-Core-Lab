@@ -10,9 +10,9 @@ namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private UserRepository _repo;
+        private IRepository<User> _repo;
 
-        public UserService(UserRepository repo)
+        public UserService(IRepository<User> repo)
         {
             _repo = repo;
         }
