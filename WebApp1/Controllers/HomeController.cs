@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp1.Controllers
@@ -13,10 +14,18 @@ namespace WebApp1.Controllers
             _userService = userService;
         }
 
+        [HttpPost("AddUser")]
+        public string AddUser()
+        {
+            var user = new UserDTO();
+            _userService.AddUser(user);
+            return "Successful";
+        }
+
         [HttpGet("GetInfo")]
         public string GetInfo()
         {
-            return _userService.GetUserByName("");
+            return _userService.GetAllUsers().ToString();
         }
     }  
 }

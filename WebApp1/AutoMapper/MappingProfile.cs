@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using DAL.Model;
+﻿using AutoMapper;
+using DAL.DTO;
+using DAL.Models;
 
 namespace WebApp1
 {
@@ -12,6 +9,7 @@ namespace WebApp1
         public MappingProfile()
         {
             CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
         }
     }
 }

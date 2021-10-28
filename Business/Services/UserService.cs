@@ -1,24 +1,54 @@
-﻿
-
+﻿using System.Collections.Generic;
+using AutoMapper;
+using Business.Infrastructure;
 using Business.Interfaces;
-using DAL.Model;
+using DAL.DTO;
+using DAL.Models;
 using DAL.Repository;
+using DAL.UserContext;
 
 namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private IRepository _userRepo;
-        public UserService(IRepository userRepository)
+        private UserRepository _repo { get; set; }
+
+        public UserService(UserRepository repo)
         {
-            _userRepo = userRepository;
+            _repo = repo;
         }
 
-
-        public string GetUserByName(string name)
+        public IEnumerable<UserDTO> GetAllUsers()
         {
-            return _userRepo.Get().Name;
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
+            return mapper.Map<IEnumerable<User>, List<UserDTO>>(_repo.GetAll());
+        }
 
+        public UserDTO GetUserById(int? id)
+        {
+            if (id == null)
+                throw new ValidationException("Не установлено id пользователя", "");
+            var user = _repo.Get(id.Value);
+            if (user == null)
+                throw new ValidationException("Пользователь не найден", "");
+            return new UserDTO() {Age = user.Age, Name = user.Name, Id = user.Id};
+        }
+
+        public void AddUser(UserDTO userDto)
+        {
+            var user = new User
+            {
+                Age = userDto.Age,
+                Id = userDto.Id,
+                Name = userDto.Name
+            };
+            
+            _repo.Create(user);
+        }
+
+        public void Dispose()
+        {
+            _repo.Dispose();
         }
     }
 }
