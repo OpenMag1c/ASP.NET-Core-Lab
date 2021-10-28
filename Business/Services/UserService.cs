@@ -5,13 +5,12 @@ using Business.Interfaces;
 using DAL.DTO;
 using DAL.Models;
 using DAL.Repository;
-using DAL.UserContext;
 
 namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private UserRepository _repo { get; set; }
+        private UserRepository _repo;
 
         public UserService(UserRepository repo)
         {

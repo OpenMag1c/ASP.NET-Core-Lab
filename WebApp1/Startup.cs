@@ -30,8 +30,8 @@ namespace WebApp1
             services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connection));
 
             services.AddControllers();
-            services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRepository, UserRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" });
