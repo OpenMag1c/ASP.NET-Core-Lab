@@ -10,8 +10,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebAPI.HealthCheck;
 
 namespace WebAPI
 {
@@ -36,7 +38,13 @@ namespace WebAPI
             // устанавливаем контекст данных
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             //HealthCheck
-            services.AddHealthChecks(); 
+            services.AddHealthChecks()
+                // Add a health check for a SQL Server database
+                .AddCheck(
+                    "usersdb-check",
+                    new SqlConnectionHealthCheck(connectionString),
+                    HealthStatus.Unhealthy,
+                    new string[] { "usersdb" });
 
             services.AddControllers();
             services.AddScoped<IUserService, UserService>();
