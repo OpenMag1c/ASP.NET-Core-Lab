@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Business.DTO;
+using Serilog;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,13 @@ namespace WebAPI.Controllers
     [Route("api/HomeController/")]
     public class HomeController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IUserService _userService;
 
-        public HomeController(IUserService userService)
+        public HomeController(IUserService userService, ILogger logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpPost("PostUser")]
@@ -21,7 +24,6 @@ namespace WebAPI.Controllers
             var user = new UserDto
             {
                 Name = name,
-                Age = 0,
             };
 
             _userService.AddUser(user);
@@ -34,9 +36,10 @@ namespace WebAPI.Controllers
             var users = new StringBuilder();
             foreach (var user in allUsers)
             {
-                users.Append($"{user.Id}. {user.Name}, {user.Age}\n");
+                users.Append($"{user.Id}. {user.Name}\n");
             }
 
+            _logger.ForContext<HomeController>().Information("request: GetInfo");
             return users.ToString();
         }
     }  

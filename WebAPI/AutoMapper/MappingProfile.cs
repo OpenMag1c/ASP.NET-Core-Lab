@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Business.DTO;
-using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebAPI.AutoMapper
 {
@@ -8,8 +8,8 @@ namespace WebAPI.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<IdentityUser<int>, UserDto>();
+            CreateMap<UserDto, IdentityUser<int>>();
         }
     }
 }

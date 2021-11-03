@@ -1,9 +1,10 @@
-﻿namespace DAL.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace DAL.Models
 {
-    public class User
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
+    //public class User : IdentityUser
+    //{
+    //    public string Name { get; set; }
+    //    public int Age { get; set; }
+    //}
 }

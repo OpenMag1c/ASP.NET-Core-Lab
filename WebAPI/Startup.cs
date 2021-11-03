@@ -1,19 +1,17 @@
-using System;
 using System.IO;
 using Business.Interfaces;
 using Business.Services;
 using DAL.Database;
-using DAL.Models;
 using DAL.Repositories;
 using DAL.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using WebAPI.HealthCheck;
@@ -35,12 +33,19 @@ namespace WebAPI
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json");
-
             var config = builder.Build();
             string connectionString = config.GetConnectionString("DefaultConnection");
 
             // устанавливаем контекст данных
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddDefaultIdentity<IdentityUser<int>>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             //HealthCheck
             services.AddHealthChecks()
                 // Add a health check for a SQL Server database
@@ -51,8 +56,9 @@ namespace WebAPI
                     new string[] { "usersdb" });
 
             services.AddControllers();
+            services.AddSingleton(Log.Logger);
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
+            services.AddScoped(typeof(IRepository<IdentityUser<int>>), typeof(UserRepository));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" });
@@ -73,7 +79,10 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSerilogRequestLogging();
 
             app.UseEndpoints(endpoints =>
             {

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using DAL.Database;
-using DAL.Models;
 using DAL.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class UserRepository : IRepository<User>, IDisposable
+    public class UserRepository : IRepository<IdentityUser<int>>, IDisposable
     {
         private readonly ApplicationDbContext _db;
 
@@ -17,28 +17,28 @@ namespace DAL.Repositories
             this._db = context;
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<IdentityUser<int>> GetAll()
         {
             return _db.Users;
         }
 
-        public User Get(int id)
+        public IdentityUser<int> Get(int id)
         {
             return _db.Users.Find(id);
         }
 
-        public IEnumerable<User> Find(Func<User, bool> predicate)
+        public IEnumerable<IdentityUser<int>> Find(Func<IdentityUser<int>, bool> predicate)
         {
             return _db.Users.Where(predicate).ToList();
         }
 
-        public void Create(User item)
+        public void Create(IdentityUser<int> item)
         {
             _db.Users.Add(item);
             _db.SaveChanges();
         }
 
-        public void Update(User item)
+        public void Update(IdentityUser<int> item)
         {
             _db.Entry(item).State = EntityState.Modified;
         }

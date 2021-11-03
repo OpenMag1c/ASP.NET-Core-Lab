@@ -1,12 +1,12 @@
 ﻿using DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Database
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
     {
-        public DbSet<User> Users { get; set; }
-
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
@@ -15,8 +15,9 @@ namespace DAL.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(new User { Age = 18, Id = 1, Name = "Maxim" });
-            modelBuilder.Entity<User>().HasData(new User { Age = 29, Id = 2, Name = "Jerry" });
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<IdentityUser<int>>().HasData(new IdentityUser<int> { Id = 1, UserName = "Maxim" });
+            modelBuilder.Entity<IdentityUser<int>>().HasData(new IdentityUser<int> { Id = 2, UserName = "Alex" });
         }
     }
 }
