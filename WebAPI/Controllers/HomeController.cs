@@ -1,13 +1,16 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using Business.DTO;
 using Serilog;
 using Business.Interfaces;
+using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
     [Route("api/HomeController/")]
-    public class HomeController : ControllerBase
+    public class HomeController : BaseController
     {
         private readonly ILogger _logger;
         private readonly IUserService _userService;
@@ -18,29 +21,17 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
-        [HttpPost("PostUser")]
-        public void AddUser([FromBody] string name)
-        {
-            var user = new UserDto
-            {
-                Name = name,
-            };
-
-            _userService.AddUser(user);
-        }
-
         [HttpGet("GetInfo")]
         public string GetInfo()
         {
-            var allUsers = _userService.GetAllUsers();
-            var users = new StringBuilder();
-            foreach (var user in allUsers)
+            var str = new StringBuilder();
+            foreach (var login in _userService.GetUserLogins())
             {
-                users.Append($"{user.Id}. {user.Name}\n");
+                str.Append(login);
+                str.Append("\n");
             }
-
             _logger.ForContext<HomeController>().Information("request: GetInfo");
-            return users.ToString();
+            return str.ToString();
         }
     }  
 }

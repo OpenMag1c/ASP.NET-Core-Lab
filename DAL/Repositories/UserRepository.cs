@@ -1,58 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DAL.Database;
+using DAL.Models;
 using DAL.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class UserRepository : IRepository<IdentityUser<int>>, IDisposable
+    public class UserRepository : IRepository<User>, IDisposable
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(UserManager<User> userManager, ApplicationDbContext context)
         {
-            this._db = context;
+            _db = context;
+            _userManager = userManager;
         }
 
-        public IEnumerable<IdentityUser<int>> GetAll()
-        {
-            return _db.Users;
-        }
-
-        public IdentityUser<int> Get(int id)
+        public User Get(int id)
         {
             return _db.Users.Find(id);
         }
 
-        public IEnumerable<IdentityUser<int>> Find(Func<IdentityUser<int>, bool> predicate)
+        public IQueryable<User> GetAllUsers()
         {
-            return _db.Users.Where(predicate).ToList();
+            return _userManager.Users;
         }
 
-        public void Create(IdentityUser<int> item)
+        public Task<User> FindUserByNameAsync(string name)
         {
-            _db.Users.Add(item);
-            _db.SaveChanges();
-        }
-
-        public void Update(IdentityUser<int> item)
-        {
-            _db.Entry(item).State = EntityState.Modified;
-        }
-
-        public void Delete(int id)
-        {
-            var book = _db.Users.Find(id);
-            if (book != null)
-                _db.Users.Remove(book);
+            var result = _userManager.FindByNameAsync(name);
+            return result;
         }
 
         public void Dispose()
         {
             _db?.Dispose();
+        }
+
+        public void RegisterUser(User user)
+        {
+            // добавляем пользователя
+            _userManager.CreateAsync(user, user.PasswordHash);
+            _db.SaveChanges();
         }
     }
 }

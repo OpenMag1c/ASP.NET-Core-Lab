@@ -2,9 +2,8 @@
 
 namespace DAL.Models
 {
-    //public class User : IdentityUser
-    //{
-    //    public string Name { get; set; }
-    //    public int Age { get; set; }
-    //}
+    public class User : IdentityUser<int>
+    {
+        public string Token { get; set; }
+    }
 }

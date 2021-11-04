@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.Infrastructure;
+using Business.Exception;
 using Business.Interfaces;
+using DAL.Models;
 using DAL.Repository;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,35 +13,51 @@ namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<IdentityUser<int>> _repo;
+        private readonly IRepository<User> _repo;
+        private readonly IMapper _mapper;
 
-        public UserService(IRepository<IdentityUser<int>> repo)
+        public UserService(IRepository<User> repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
-        public ClaimsIdentity GetIdentity(string username, string password)
+        public UserDTO GetUserById(int? id)
         {
-            throw new System.NotImplementedException();
+            if (id == null)
+                throw new ValidationException("Не установлено id пользователя", "");
+            var user = _repo.Get(id.Value);
+            if (user == null)
+                throw new ValidationException("Пользователь не найден", "");
+            return _mapper.Map<UserDTO>(user);
         }
 
-        //public IEnumerable<UserDto> GetAllUsers()
+        public async void Register(UserDTO userDTO)
+        {
+            var user = _mapper.Map<User>(userDTO);
+            _repo.RegisterUser(user);
+        }
+
+        public List<string> GetUserLogins()
+        {
+            var result = new List<string>();
+            foreach (var user in _repo.GetAllUsers())
+            {
+                result.Add(user.UserName);
+            }
+
+            return result;
+        }
+
+        //public async Task<User> FindUserByName(string name) => await _repo.FindUserByName(name);
+
+        //public IEnumerable<UserDTO> GetAllUsers()
         //{
-        //    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<IdentityUser<int>, UserDto>()).CreateMapper();
-        //    return mapper.Map<IEnumerable<IdentityUser<int>>, List<UserDto>>(_repo.GetAll());
+        //    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<IdentityUser<int>, UserDTO>()).CreateMapper();
+        //    return mapper.Map<IEnumerable<IdentityUser<int>>, List<UserDTO>>(_repo.GetAll());
         //}
 
-        //public UserDto GetUserById(int? id)
-        //{
-        //    if (id == null)
-        //        throw new ValidationException("Не установлено id пользователя", "");
-        //    var user = _repo.Get(id.Value);
-        //    if (user == null)
-        //        throw new ValidationException("Пользователь не найден", "");
-        //    return new UserDto() {Name = user.UserName, Id = user.Id};
-        //}
-
-        //public void AddUser(UserDto userDto)
+        //public void AddUser(UserDTO userDto)
         //{
         //    var user = new IdentityUser<int>
         //    {
