@@ -11,9 +11,9 @@ namespace WebAPI.Controllers
     public class UserController : BaseController
     {
         [HttpPost("login")]
-        public async Task<ActionResult<User>> LoginAsync(LoginQuery query)
+        public async Task<ActionResult<User>> LoginAsync([FromBody] string email,[FromBody] string password)
         {
-            return await Mediator.Send(query);
+            return await Mediator.Send( new LoginQuery() { Email = email,Password = password});
         }
 
 		[HttpPost("registration")]
