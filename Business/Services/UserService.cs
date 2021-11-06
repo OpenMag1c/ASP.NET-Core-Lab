@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Exception;
 using Business.Interfaces;
 using DAL.Models;
 using DAL.Repository;
-using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services
 {
@@ -22,17 +19,17 @@ namespace Business.Services
             _mapper = mapper;
         }
 
-        public UserDTO GetUserById(int? id)
+        public UserCredentialsDTO GetUserById(int? id)
         {
             if (id == null)
                 throw new ValidationException("Не установлено id пользователя", "");
             var user = _repo.Get(id.Value);
             if (user == null)
                 throw new ValidationException("Пользователь не найден", "");
-            return _mapper.Map<UserDTO>(user);
+            return _mapper.Map<UserCredentialsDTO>(user);
         }
 
-        public async void Register(UserDTO userDTO)
+        public async void Register(UserCredentialsDTO userDTO)
         {
             var user = _mapper.Map<User>(userDTO);
             _repo.RegisterUser(user);

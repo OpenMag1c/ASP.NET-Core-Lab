@@ -8,8 +8,8 @@ namespace Business.Interfaces
 {
     public interface IUserService
     {
-        UserDTO GetUserById(int? id);
-        void Register(UserDTO user);
+        UserCredentialsDTO GetUserById(int? id);
+        void Register(UserCredentialsDTO user);
         List<string> GetUserLogins();
     }
 }

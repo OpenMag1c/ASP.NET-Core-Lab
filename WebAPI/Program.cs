@@ -1,12 +1,10 @@
 using System;
-using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using DAL.Database;
 using DAL.Models;
-using EFData;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +15,7 @@ namespace WebAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             ConfigureLogger();
             try
@@ -30,14 +28,14 @@ namespace WebAPI
                     var services = scope.ServiceProvider;
                     try
                     {
-                        var context = services.GetRequiredService<ApplicationDbContext>();
                         var userManager = services.GetRequiredService<UserManager<User>>();
-                        context.Database.Migrate();
-                        DataSeed.SeedDataAsync(context, userManager).Wait();
+                        var rolesManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+                        await Initializer.InitializeAsync(userManager, rolesManager);
                     }
                     catch (Exception ex)
                     {
-                        Log.Fatal(ex, "An error occured during migration");
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "An error occurred while seeding the database.");
                     }
                 }
 

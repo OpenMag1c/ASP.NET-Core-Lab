@@ -4,6 +4,5 @@ namespace DAL.Models
 {
     public class User : IdentityUser<int>
     {
-        public string Token { get; set; }
     }
 }

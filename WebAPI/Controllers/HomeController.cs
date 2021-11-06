@@ -1,10 +1,8 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Business.DTO;
+﻿using System.Security;
+using System.Text;
 using Serilog;
 using Business.Interfaces;
-using DAL.Models;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,16 +10,15 @@ namespace WebAPI.Controllers
     [Route("api/HomeController/")]
     public class HomeController : BaseController
     {
-        private readonly ILogger _logger;
-        private readonly IUserService _userService;
+        private IUserService _userService;
 
-        public HomeController(IUserService userService, ILogger logger)
+        public HomeController(IUserService userService, ILogger logger) : base(logger)
         {
             _userService = userService;
-            _logger = logger;
         }
 
         [HttpGet("GetInfo")]
+        [AllowAnonymous]
         public string GetInfo()
         {
             var str = new StringBuilder();

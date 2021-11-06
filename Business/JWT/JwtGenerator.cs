@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using Business.Interfaces;
 using DAL.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Business.Authentication
+namespace Business.JWT
 {
     public class JwtGenerator : IJwtGenerator
     {
@@ -28,8 +28,8 @@ namespace Business.Authentication
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = credentials
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = credentials    
             };
             var tokenHandler = new JwtSecurityTokenHandler();
 

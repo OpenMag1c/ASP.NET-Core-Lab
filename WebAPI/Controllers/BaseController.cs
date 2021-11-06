@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace WebAPI.Controllers
 {
@@ -8,8 +8,11 @@ namespace WebAPI.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        private IMediator _mediator;
+        public readonly ILogger _logger;
 
-        protected IMediator Mediator => _mediator ?? (_mediator = HttpContext.RequestServices.GetService<IMediator>());
+        public BaseController(ILogger logger)
+        {
+            _logger = logger;
+        }
     }
 }

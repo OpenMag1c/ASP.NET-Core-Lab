@@ -9,11 +9,11 @@ namespace WebAPI.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDTO>()
-                .ForMember(dest => dest.Login, source => source.MapFrom(source => source.UserName))
+            CreateMap<User, UserCredentialsDTO>()
+                .ForMember(dest => dest.Email, source => source.MapFrom(source => source.Email))
                 .ForMember(dest => dest.Password, source => source.MapFrom(source => source.PasswordHash));
-            CreateMap<UserDTO, User>()
-                .ForMember(dest => dest.UserName, source => source.MapFrom(source => source.Login))
+            CreateMap<UserCredentialsDTO, User>()
+                .ForMember(dest => dest.Email, source => source.MapFrom(source => source.Email))
                 .ForMember(dest => dest.PasswordHash, source => source.MapFrom(source => source.Password));
         }
     }
