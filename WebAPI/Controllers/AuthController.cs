@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
 
         [HttpGet("email-confirmation")]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail([FromBody] int id, [FromBody] string jwt)
+        public async Task<IActionResult> ConfirmEmail(int id, string jwt)
         {
             var result = await _authenticationService.ConfirmEmailAsync(id, jwt);
 

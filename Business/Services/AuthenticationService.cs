@@ -55,7 +55,6 @@ namespace Business.Services
         public async Task<bool> ConfirmEmailAsync(int id, string jwt)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
-
             if (user != null && jwt == _jwtGenerator.CreateToken(user))
             {
                 user.EmailConfirmed = true;
