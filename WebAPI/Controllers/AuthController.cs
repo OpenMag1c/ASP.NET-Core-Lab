@@ -29,16 +29,16 @@ namespace WebAPI.Controllers
         [HttpPost("sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserCredentialsDTO userCredentialsDto)
-        {
+            {
             var result = await _authenticationService.SignUpAsync(userCredentialsDto);
 
             return !result ? BadRequest() : Ok();
-        }
+            }
 
         [HttpGet("email-confirmation")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(int id, string jwt)
-        {
+            {
             var result = await _authenticationService.ConfirmEmailAsync(id, jwt);
 
             return result ? NoContent() : BadRequest("Wrong token or id");
