@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/HomeController/")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class HomeController : BaseController
     {
         private IUserService _userService;
@@ -18,7 +18,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetInfo")]
-        [AllowAnonymous]
         public string GetInfo()
         {
             var str = new StringBuilder();

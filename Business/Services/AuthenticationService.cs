@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Policy;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Business.Services
 {
@@ -32,36 +37,42 @@ namespace Business.Services
 
             var isRightPassword = await _userManager.CheckPasswordAsync(user, userCredentialsDto.Password);
 
-            return isRightPassword ? _jwtGenerator.CreateToken(user) : null;
+            return (isRightPassword && await _userManager.IsEmailConfirmedAsync(user)) ? _jwtGenerator.CreateToken(user) : null;
         }
 
-        public async Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto)
+        public async Task<ConfirmEmailDTO> SignUpAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = _mapper.Map<User>(userCredentialsDto);
             if (user.UserName is null)
             {
                 user.UserName = user.Email;
             }
-
+            
             var result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "user");
+                return new ConfirmEmailDTO()
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Token = await _userManager.GenerateEmailConfirmationTokenAsync(user)
+                };
             }
 
-            return result.Succeeded;
+            return null;
         }
 
-        public async Task<bool> ConfirmEmailAsync(int id, string jwt)
+        public async Task<bool> ConfirmEmailAsync(int id, string token)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user != null && jwt == _jwtGenerator.CreateToken(user))
+            if (user is null)
             {
-                user.EmailConfirmed = true;
-                return true;
+                return false;
             }
 
-            return false;
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return result.Succeeded;
         }
     }
 }

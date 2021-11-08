@@ -49,7 +49,9 @@ namespace WebAPI
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
