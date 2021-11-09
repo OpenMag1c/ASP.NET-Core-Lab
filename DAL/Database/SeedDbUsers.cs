@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Database
 {
-    public class Initializer
+    public class SeedDbUsers
     {
-        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
+        public static async Task InitSeedDbAsync(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             string adminEmail = "admin@gmail.com";
             string password = "_Aa123456";

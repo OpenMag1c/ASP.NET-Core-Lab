@@ -30,7 +30,7 @@ namespace WebAPI
                     {
                         var userManager = services.GetRequiredService<UserManager<User>>();
                         var rolesManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
-                        await Initializer.InitializeAsync(userManager, rolesManager);
+                        await SeedDbUsers.InitSeedDbAsync(userManager, rolesManager);
                     }
                     catch (Exception ex)
                     {

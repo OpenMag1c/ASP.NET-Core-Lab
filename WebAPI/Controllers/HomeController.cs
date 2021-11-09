@@ -1,5 +1,4 @@
-﻿using System.Security;
-using System.Text;
+﻿using System.Text;
 using Serilog;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetInfo")]
+        [Authorize(Roles = "admin")]
         public string GetInfo()
         {
             var str = new StringBuilder();

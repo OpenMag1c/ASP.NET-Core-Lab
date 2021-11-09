@@ -1,15 +1,10 @@
-﻿using System.Security.Policy;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Interfaces;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Business.Services
 {
@@ -37,7 +32,7 @@ namespace Business.Services
 
             var isRightPassword = await _userManager.CheckPasswordAsync(user, userCredentialsDto.Password);
 
-            return (isRightPassword && await _userManager.IsEmailConfirmedAsync(user)) ? _jwtGenerator.CreateToken(user) : null;
+            return (isRightPassword && await _userManager.IsEmailConfirmedAsync(user)) ? await _jwtGenerator.GenerateJwtTokenAsync(user) : null;
         }
 
         public async Task<ConfirmEmailDTO> SignUpAsync(UserCredentialsDTO userCredentialsDto)

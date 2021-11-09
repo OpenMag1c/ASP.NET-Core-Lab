@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Text;
 using Business.Interfaces;
@@ -54,16 +55,28 @@ namespace WebAPI
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                opt =>
+            // ===== Add Jwt Authentication ========
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            // jwt
+            // get options
+            var jwtAppSettingOptions = Configuration.GetSection("JwtIssuerOptions");
+            services
+                .AddAuthentication(options =>
                 {
-                    opt.TokenValidationParameters = new TokenValidationParameters
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = key,
-                        ValidateAudience = false,
-                        ValidateIssuer = false,
+                        ValidIssuer = jwtAppSettingOptions["JwtIssuer"],
+                        ValidAudience = jwtAppSettingOptions["JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAppSettingOptions["JwtKey"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
             services.AddScoped<IJwtGenerator, JwtGenerator>();
