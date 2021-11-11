@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Exception;
 using Business.Interfaces;
 using DAL.Models;
 using DAL.Repository;
+using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services
 {
@@ -12,27 +15,13 @@ namespace Business.Services
     {
         private readonly IRepository<User> _repo;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(IRepository<User> repo, IMapper mapper)
+        public UserService(IRepository<User> repo, IMapper mapper, UserManager<User> userManager)
         {
             _repo = repo;
             _mapper = mapper;
-        }
-
-        public UserCredentialsDTO GetUserById(int? id)
-        {
-            if (id == null)
-                throw new ValidationException("Не установлено id пользователя", "");
-            var user = _repo.Get(id.Value);
-            if (user == null)
-                throw new ValidationException("Пользователь не найден", "");
-            return _mapper.Map<UserCredentialsDTO>(user);
-        }
-
-        public async void Register(UserCredentialsDTO userDTO)
-        {
-            var user = _mapper.Map<User>(userDTO);
-            _repo.RegisterUser(user);
+            _userManager = userManager;
         }
 
         public List<string> GetUserLogins()
@@ -46,23 +35,35 @@ namespace Business.Services
             return result;
         }
 
-        //public async Task<User> FindUserByName(string name) => await _repo.FindUserByName(name);
+        public async Task<UserDTO> UpdateUserAsync(string userId, UserDTO userDto)
+        {
+            var oldUser = await _userManager.FindByIdAsync(userId);
+            if (oldUser is null)
+            {
+                return null;
+            }
 
-        //public IEnumerable<UserDTO> GetAllUsers()
-        //{
-        //    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<IdentityUser<int>, UserDTO>()).CreateMapper();
-        //    return mapper.Map<IEnumerable<IdentityUser<int>>, List<UserDTO>>(_repo.GetAll());
-        //}
+            var newUser = _mapper.Map(userDto, oldUser);
+            var result = await _userManager.UpdateAsync(newUser);
+            if (!result.Succeeded)
+            {
+                return null;
+            }
 
-        //public void AddUser(UserDTO userDto)
-        //{
-        //    var user = new IdentityUser<int>
-        //    {
-        //        Id = userDto.Id,
-        //        UserName = userDto.Name
-        //    };
+            return _mapper.Map<UserDTO>(newUser);
+        }
 
-        //    _repo.Create(user);
-        //}
+        public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var isRightPassword = await _userManager.CheckPasswordAsync(user, oldPassword);
+            if (user is null || !isRightPassword)
+            {
+                return false;
+            }
+
+            await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            return true;
+        }
     }
 }

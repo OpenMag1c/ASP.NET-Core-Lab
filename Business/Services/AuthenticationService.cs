@@ -16,11 +16,13 @@ namespace Business.Services
 
         private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator)
+        private readonly EmailService _emailService;
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator, EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
             _jwtGenerator = jwtGenerator;
+            _emailService = emailService;
         }
         public async Task<string> SignInAsync(UserCredentialsDTO userCredentialsDto)
         {
@@ -31,31 +33,25 @@ namespace Business.Services
             }
 
             var isRightPassword = await _userManager.CheckPasswordAsync(user, userCredentialsDto.Password);
+            var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
 
-            return (isRightPassword && await _userManager.IsEmailConfirmedAsync(user)) ? await _jwtGenerator.GenerateJwtTokenAsync(user) : null;
+            return (isRightPassword && isEmailConfirmed) ? await _jwtGenerator.GenerateJwtTokenAsync(user) : null;
         }
 
-        public async Task<ConfirmEmailDTO> SignUpAsync(UserCredentialsDTO userCredentialsDto)
+        public async Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = _mapper.Map<User>(userCredentialsDto);
-            if (user.UserName is null)
-            {
-                user.UserName = user.Email;
-            }
-            
             var result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "user");
-                return new ConfirmEmailDTO()
-                {
-                    Email = user.Email,
-                    Id = user.Id,
-                    Token = await _userManager.GenerateEmailConfirmationTokenAsync(user)
-                };
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                await _emailService.SendEmailAsync(user.Email, "Confirm your account",
+                    $"Подтвердите регистрацию, ваш Id: {user.Id} \n токен: {token}");
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         public async Task<bool> ConfirmEmailAsync(int id, string token)

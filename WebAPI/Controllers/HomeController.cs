@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Serilog;
 using Business.Interfaces;
+using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetInfo")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public string GetInfo()
         {
             var str = new StringBuilder();

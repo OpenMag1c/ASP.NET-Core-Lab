@@ -8,23 +8,23 @@ namespace DAL.Database
     {
         public static async Task InitSeedDbAsync(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
-            string adminEmail = "admin@gmail.com";
-            string password = "_Aa123456";
-            if (await roleManager.FindByNameAsync("admin") == null)
+            const string AdminEmail = "admin@gmail.com";
+            const string Password = "_Aa123456";
+            if (await roleManager.FindByNameAsync(Roles.Admin) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole<int>("admin"));
+                await roleManager.CreateAsync(new IdentityRole<int>(Roles.Admin));
             }
-            if (await roleManager.FindByNameAsync("user") == null)
+            if (await roleManager.FindByNameAsync(Roles.User) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole<int>("user"));
+                await roleManager.CreateAsync(new IdentityRole<int>(Roles.User));
             }
-            if (await userManager.FindByNameAsync(adminEmail) == null)
+            if (await userManager.FindByNameAsync(AdminEmail) == null)
             {
-                User admin = new User { Email = adminEmail, UserName = adminEmail };
-                IdentityResult result = await userManager.CreateAsync(admin, password);
+                User admin = new User { Email = AdminEmail, UserName = "Admin", EmailConfirmed = true};
+                IdentityResult result = await userManager.CreateAsync(admin, Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(admin, "admin");
+                    await userManager.AddToRoleAsync(admin, Roles.Admin);
                 }
             }
         }
