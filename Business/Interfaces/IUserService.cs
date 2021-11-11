@@ -9,5 +9,7 @@ namespace Business.Interfaces
         List<string> GetUserLogins();
         Task<UserDTO> UpdateUserAsync(string userId, UserDTO userDto);
         Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
+        string GetUserDtoStr(UserDTO userDto);
+        Task<UserDTO> GetProfileInfoAsync(string userId);
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.Exception;
 using Business.Interfaces;
 using DAL.Models;
 using DAL.Repository;
@@ -63,7 +63,34 @@ namespace Business.Services
             }
 
             await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+
             return true;
+        }
+        public async Task<UserDTO> GetProfileInfoAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public string GetUserDtoStr(UserDTO userDto)
+        {
+            var userDtoStr = new StringBuilder();
+            userDtoStr.Append($"Username: {userDto.UserName}")
+                .Append(Environment.NewLine)
+                .Append($"Email: {userDto.Email}")
+                .Append(Environment.NewLine)
+                .Append($"Age: {userDto.Age}")
+                .Append(Environment.NewLine)
+                .Append($"AddressDelivery: {userDto.AddressDelivery}")
+                .Append(Environment.NewLine)
+                .Append($"PhoneNumber: {userDto.PhoneNumber}");
+
+            return userDtoStr.ToString();
         }
     }
 }

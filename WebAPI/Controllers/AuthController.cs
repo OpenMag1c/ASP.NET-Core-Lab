@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpGet("email-confirmation")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(int id, string token)
-            {
+        {
             var result = await _authenticationService.ConfirmEmailAsync(id, token);
 
             return result ? NoContent() : BadRequest("Email is unconfirmed.");

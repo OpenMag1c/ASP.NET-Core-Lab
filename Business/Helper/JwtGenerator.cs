@@ -48,7 +48,8 @@ namespace Business.JWT
                 jwtAppSettingOptions["JwtAudience"],
                 claims,
                 expires: expires,
-                signingCredentials: creds
+                signingCredentials: creds,
+                notBefore: DateTime.Now
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
