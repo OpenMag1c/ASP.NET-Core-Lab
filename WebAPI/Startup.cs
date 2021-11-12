@@ -7,9 +7,9 @@ using Business.Interfaces;
 using Business.JWT;
 using Business.Services;
 using DAL.Database;
+using DAL.Interfaces;
 using DAL.Models;
 using DAL.Repositories;
-using DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -96,10 +96,11 @@ namespace WebAPI
             services.AddControllers();
             services.AddSingleton(Log.Logger);
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGamesService, GamesService>();
             services.AddScoped<EmailService>();
-            services.AddScoped<UserHelpers>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
+            services.AddScoped(typeof(IRepository<Product>), typeof(GamesRepository));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" });

@@ -4,6 +4,7 @@ using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using WebAPI.Pages;
 
 namespace WebAPI.Controllers
 {
@@ -22,7 +23,7 @@ namespace WebAPI.Controllers
         {
             var jwt = await _authenticationService.SignInAsync(userCredentialsDto);
 
-            return jwt is null ? Unauthorized("Wrong email or password.") : Ok(jwt);
+            return jwt is null ? Unauthorized(Messages.WrongPasswordOrEmail): Ok(jwt);
         }
 
         [HttpPost("sign-up")]
@@ -31,7 +32,7 @@ namespace WebAPI.Controllers
         {
             var result = await _authenticationService.SignUpAsync(userCredentialsDto);
             
-            return result ? Ok() : BadRequest();
+            return result ? Ok(Messages.AllOK) : BadRequest(Messages.NotCompleted);
         }
 
         [HttpGet("email-confirmation")]
@@ -40,7 +41,7 @@ namespace WebAPI.Controllers
         {
             var result = await _authenticationService.ConfirmEmailAsync(id, token);
 
-            return result ? NoContent() : BadRequest("Email is unconfirmed.");
+            return result ? NoContent() : BadRequest(Messages.EmailUnConfirmed);
         }
     }
 }

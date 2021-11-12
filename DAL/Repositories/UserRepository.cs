@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DAL.Database;
+using DAL.Interfaces;
 using DAL.Models;
-using DAL.Repository;
 using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Repositories
@@ -19,7 +19,7 @@ namespace DAL.Repositories
             _userManager = userManager;
         }
 
-        public IQueryable<User> GetAllUsers()
+        public IQueryable<User> GetAll()
         {
             return _userManager.Users;
         }

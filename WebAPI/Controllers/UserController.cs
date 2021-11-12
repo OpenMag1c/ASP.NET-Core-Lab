@@ -5,12 +5,13 @@ using Business.Helper;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
+using WebAPI.Pages;
 
 namespace WebAPI.Controllers
 {
     public class UserController : BaseController
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
         public UserController(ILogger logger, IUserService userService) : base(logger)
         {
             _userService = userService;
@@ -18,29 +19,32 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<string> UpdateProfile([FromBody] UserDTO userDto)
+        public async Task<ActionResult<UserDTO>> UpdateProfile([FromBody] UserDTO userDto)
         {
-            var updatedUserDto = await _userService.UpdateUserAsync(UserHelpers.GetUserIdByClaim(User.Claims), userDto); 
+            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+            var updatedUserDto = await _userService.UpdateUserAsync(userId, userDto); 
 
-            return _userService.GetUserDtoStr(updatedUserDto);
+            return updatedUserDto;
         }
 
         [HttpPatch("password")]
         [Authorize]
         public async Task<IActionResult> ChangeProfilePassword(string oldPassword, string newPassword)
         {
-            var result = await _userService.ChangePasswordAsync(UserHelpers.GetUserIdByClaim(User.Claims), oldPassword, newPassword);
+            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+            var result = await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
 
-            return result ? NoContent() : BadRequest();
+            return result ? NoContent() : BadRequest(Messages.NotCompleted);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<string> GetProfileInfo()
+        public async Task<ActionResult<UserDTO>> GetProfileInfo()
         {
-            var userDto = await _userService.GetProfileInfoAsync(UserHelpers.GetUserIdByClaim(User.Claims));
+            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+            var userDto = await _userService.GetProfileInfoAsync(userId);
 
-            return _userService.GetUserDtoStr(userDto);
+            return userDto;
         }
     }
 }

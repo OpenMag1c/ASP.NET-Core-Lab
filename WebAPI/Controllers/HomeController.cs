@@ -1,16 +1,16 @@
 ﻿using System.Text;
 using Serilog;
 using Business.Interfaces;
+using DAL.Enum;
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class HomeController : BaseController
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public HomeController(IUserService userService, ILogger logger) : base(logger)
         {

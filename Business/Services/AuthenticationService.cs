@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
@@ -41,13 +43,20 @@ namespace Business.Services
         public async Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = _mapper.Map<User>(userCredentialsDto);
+            if (user is null)
+            {
+                return false;
+            }
+
             var result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "user");
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var tokenBytes = Encoding.UTF8.GetBytes(token);
+                var tokenEncoded = WebEncoders.Base64UrlEncode(tokenBytes);
                 await _emailService.SendEmailAsync(user.Email, "Confirm your account",
-                    $"Подтвердите регистрацию, ваш Id: {user.Id} \n токен: {token}");
+                    $"https://localhost:44328/api/Auth/email-confirmation?id={user.Id}&token={tokenEncoded}"); 
                 return true;
             }
 
@@ -56,13 +65,16 @@ namespace Business.Services
 
         public async Task<bool> ConfirmEmailAsync(int id, string token)
         {
+            var tokenDecodedBytes = WebEncoders.Base64UrlDecode(token);
+            var tokenDecodedString = Encoding.UTF8.GetString(tokenDecodedBytes);
+
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user is null)
             {
                 return false;
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var result = await _userManager.ConfirmEmailAsync(user, tokenDecodedString);
             return result.Succeeded;
         }
     }

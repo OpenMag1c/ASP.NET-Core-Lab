@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Business.Helper
 {
-    public class UserHelpers
+    public static class UserHelpers
     {
         public static string GetUserIdByClaim(IEnumerable<Claim> claims)
         {

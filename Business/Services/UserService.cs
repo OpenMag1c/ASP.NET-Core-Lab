@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Interfaces;
+using DAL.Interfaces;
 using DAL.Models;
-using DAL.Repository;
 using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services
@@ -27,7 +27,7 @@ namespace Business.Services
         public List<string> GetUserLogins()
         {
             var result = new List<string>();
-            foreach (var user in _repo.GetAllUsers())
+            foreach (var user in _repo.GetAll())
             {
                 result.Add(user.UserName);
             }
@@ -75,22 +75,6 @@ namespace Business.Services
             }
 
             return _mapper.Map<UserDTO>(user);
-        }
-
-        public string GetUserDtoStr(UserDTO userDto)
-        {
-            var userDtoStr = new StringBuilder();
-            userDtoStr.Append($"Username: {userDto.UserName}")
-                .Append(Environment.NewLine)
-                .Append($"Email: {userDto.Email}")
-                .Append(Environment.NewLine)
-                .Append($"Age: {userDto.Age}")
-                .Append(Environment.NewLine)
-                .Append($"AddressDelivery: {userDto.AddressDelivery}")
-                .Append(Environment.NewLine)
-                .Append($"PhoneNumber: {userDto.PhoneNumber}");
-
-            return userDtoStr.ToString();
         }
     }
 }

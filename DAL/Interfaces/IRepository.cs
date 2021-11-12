@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 
-namespace DAL.Repository
+namespace DAL.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        IQueryable<T> GetAllUsers();
+        IQueryable<T> GetAll();
     }
 }

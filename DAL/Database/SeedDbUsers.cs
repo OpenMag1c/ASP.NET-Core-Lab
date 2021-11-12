@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using DAL.Enum;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Database
 {
-    public class SeedDbUsers
+    public static class SeedDbUsers
     {
         public static async Task InitSeedDbAsync(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
