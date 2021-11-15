@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using AutoMapper;
 using Business.DTO;
+using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
@@ -40,7 +41,7 @@ namespace Business.Services
         {
             if (term == null)
             {
-                return ArraySegment<ProductDTO>.Empty;
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
             }
 
             var products = _repo.GetAll().ToArray();
@@ -50,6 +51,11 @@ namespace Business.Services
                     .Skip(offset)
                     .Take(limit)
                     .Select(prod => _mapper.Map<ProductDTO>(prod));
+
+            if (neededProducts == null)
+            {
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+            }
 
             return neededProducts;
         }

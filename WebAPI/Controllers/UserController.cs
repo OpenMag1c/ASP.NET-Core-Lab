@@ -48,9 +48,9 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> ChangeProfilePassword(string oldPassword, string newPassword)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            var result = await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
+            await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
 
-            return result ? NoContent() : BadRequest(Messages.NotCompleted);
+            return NoContent();
         }
 
         /// <summary>

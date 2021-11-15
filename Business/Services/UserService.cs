@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
+using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
@@ -40,14 +42,14 @@ namespace Business.Services
             var oldUser = await _userManager.FindByIdAsync(userId);
             if (oldUser is null)
             {
-                return null;
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
             }
 
             var newUser = _mapper.Map(userDto, oldUser);
             var result = await _userManager.UpdateAsync(newUser);
             if (!result.Succeeded)
             {
-                return null;
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
             }
 
             return _mapper.Map<UserDTO>(newUser);
@@ -59,7 +61,7 @@ namespace Business.Services
             var isRightPassword = await _userManager.CheckPasswordAsync(user, oldPassword);
             if (user is null || !isRightPassword)
             {
-                return false;
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.WrongPassword);
             }
 
             await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
@@ -71,7 +73,7 @@ namespace Business.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
             {
-                return null;
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
             }
 
             return _mapper.Map<UserDTO>(user);

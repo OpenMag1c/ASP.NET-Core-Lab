@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         {
             var jwt = await _authenticationService.SignInAsync(userCredentialsDto);
 
-            return jwt is null ? Unauthorized(Messages.WrongPasswordOrEmail): Ok(jwt);
+            return Ok(jwt);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserCredentialsDTO userCredentialsDto)
         {
-            var result = await _authenticationService.SignUpAsync(userCredentialsDto);
+            await _authenticationService.SignUpAsync(userCredentialsDto);
             
-            return result ? Ok(Messages.AllOK) : BadRequest(Messages.NotCompleted);
+            return Ok();
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(int id, string token)
         {
-            var result = await _authenticationService.ConfirmEmailAsync(id, token);
+            await _authenticationService.ConfirmEmailAsync(id, token);
 
-            return result ? NoContent() : BadRequest(Messages.EmailUnConfirmed);
+            return NoContent();
         }
     }
 }
