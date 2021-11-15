@@ -1,43 +1,33 @@
 ﻿using System.Text;
-using Business.DTO;
+using Serilog;
 using Business.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/HomeController/")]
-    public class HomeController : ControllerBase
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public class HomeController : BaseController
     {
-        private readonly IUserService _userService;
+        private IUserService _userService;
 
-        public HomeController(IUserService userService)
+        public HomeController(IUserService userService, ILogger logger) : base(logger)
         {
             _userService = userService;
         }
 
-        [HttpPost("PostUser")]
-        public void AddUser([FromBody] string name)
-        {
-            var user = new UserDto
-            {
-                Name = name,
-                Age = 0,
-            };
-
-            _userService.AddUser(user);
-        }
-
         [HttpGet("GetInfo")]
+        [Authorize(Roles = "admin")]
         public string GetInfo()
         {
-            var allUsers = _userService.GetAllUsers();
-            var users = new StringBuilder();
-            foreach (var user in allUsers)
+            var str = new StringBuilder();
+            foreach (var login in _userService.GetUserLogins())
             {
-                users.Append($"{user.Id}. {user.Name}, {user.Age}\n");
+                str.Append(login);
+                str.Append("\n");
             }
-
-            return users.ToString();
+            _logger.ForContext<HomeController>().Information("request: GetInfo");
+            return str.ToString();
         }
     }  
 }

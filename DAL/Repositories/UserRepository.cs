@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DAL.Database;
 using DAL.Models;
 using DAL.Repository;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Repositories
 {
     public class UserRepository : IRepository<User>, IDisposable
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(UserManager<User> userManager, ApplicationDbContext context)
         {
-            this._db = context;
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return _db.Users;
+            _db = context;
+            _userManager = userManager;
         }
 
         public User Get(int id)
@@ -27,32 +24,27 @@ namespace DAL.Repositories
             return _db.Users.Find(id);
         }
 
-        public IEnumerable<User> Find(Func<User, bool> predicate)
+        public IQueryable<User> GetAllUsers()
         {
-            return _db.Users.Where(predicate).ToList();
+            return _userManager.Users;
         }
 
-        public void Create(User item)
+        public Task<User> FindUserByNameAsync(string name)
         {
-            _db.Users.Add(item);
-            _db.SaveChanges();
-        }
-
-        public void Update(User item)
-        {
-            _db.Entry(item).State = EntityState.Modified;
-        }
-
-        public void Delete(int id)
-        {
-            var book = _db.Users.Find(id);
-            if (book != null)
-                _db.Users.Remove(book);
+            var result = _userManager.FindByNameAsync(name);
+            return result;
         }
 
         public void Dispose()
         {
             _db?.Dispose();
+        }
+
+        public void RegisterUser(User user)
+        {
+            // добавляем пользователя
+            _userManager.CreateAsync(user, user.PasswordHash);
+            _db.SaveChanges();
         }
     }
 }

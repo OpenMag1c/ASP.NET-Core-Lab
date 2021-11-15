@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DAL.Models;
 
 namespace DAL.Repository
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetAll();
+        void RegisterUser(T user);
         T Get(int id);
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
-        void Create(T item);
-        void Update(T item);
-        void Delete(int id);
+        IQueryable<T> GetAllUsers();
+        //Task<User> FindUserByName(string name);
     }
 }

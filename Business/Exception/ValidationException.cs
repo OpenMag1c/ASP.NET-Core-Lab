@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Business.Infrastructure
+﻿namespace Business.Exception
 {
-    public class ValidationException : Exception
+    public class ValidationException : System.Exception
     {
         public string Property { get; protected set; }
 
