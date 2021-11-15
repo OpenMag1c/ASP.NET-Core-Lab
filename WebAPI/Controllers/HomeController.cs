@@ -2,7 +2,6 @@
 using Serilog;
 using Business.Interfaces;
 using DAL.Enum;
-using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,13 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Get all user logins
+        /// </summary>
+        /// <response code="200">All OK</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="403">Access denied</response>
+        /// <response code="500">Oops!</response>
         [HttpGet("GetInfo")]
         [Authorize(Roles = Roles.Admin)]
         public string GetInfo()
@@ -28,6 +34,7 @@ namespace WebAPI.Controllers
                 str.Append("\n");
             }
             _logger.ForContext<HomeController>().Information("request: GetInfo");
+
             return str.ToString();
         }
     }  

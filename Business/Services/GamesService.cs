@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Business.DTO;
@@ -33,6 +34,24 @@ namespace Business.Services
                     });
 
             return sortedProducts;
+        }
+
+        public IEnumerable<ProductDTO> SearchProductsByTerm(string term, int limit, int offset)
+        {
+            if (term == null)
+            {
+                return ArraySegment<ProductDTO>.Empty;
+            }
+
+            var products = _repo.GetAll().ToArray();
+            term = term.ToLower();
+            var neededProducts = 
+                products.Where(prod => prod.Name.ToLower().Contains(term))
+                    .Skip(offset)
+                    .Take(limit)
+                    .Select(prod => _mapper.Map<ProductDTO>(prod));
+
+            return neededProducts;
         }
     }
 }

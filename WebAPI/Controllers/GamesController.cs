@@ -6,7 +6,6 @@ using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using WebAPI.Pages;
 
 namespace WebAPI.Controllers
 {
@@ -19,11 +18,34 @@ namespace WebAPI.Controllers
             _gamesService = gamesService;
         }
 
+        /// <summary>
+        /// Represent three top platforms by number of games
+        /// </summary>
+        /// <response code="200">All OK</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="500">Oops!</response>
         [HttpGet("top-platforms")]
         [AllowAnonymous]
         public IEnumerable<PlatformDTO> GetTopPlatforms()
         {
-            return _gamesService.GetTopThreePlatforms();
+            var result = _gamesService.GetTopThreePlatforms();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Search products by name
+        /// </summary>
+        /// <response code="200">All OK</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="500">Oops!</response>
+        [HttpGet("search")]
+        [AllowAnonymous]
+        public IEnumerable<ProductDTO> SearchProducts(string term, int limit, int offset)
+        {
+            var result = _gamesService.SearchProductsByTerm(term, limit, offset);
+
+            return result;
         }
     }
 }

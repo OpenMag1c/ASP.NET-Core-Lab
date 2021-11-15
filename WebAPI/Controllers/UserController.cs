@@ -12,11 +12,19 @@ namespace WebAPI.Controllers
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
+
         public UserController(ILogger logger, IUserService userService) : base(logger)
         {
             _userService = userService;
         }
 
+        /// <summary>
+        /// Update user profile by model
+        /// </summary>
+        /// <response code="200">Profile updated</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult<UserDTO>> UpdateProfile([FromBody] UserDTO userDto)
@@ -27,6 +35,14 @@ namespace WebAPI.Controllers
             return updatedUserDto;
         }
 
+        /// <summary>
+        /// Update user password
+        /// </summary>
+        /// <response code="200">Profile updated</response>
+        /// <response code="204">Profile password updated</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [HttpPatch("password")]
         [Authorize]
         public async Task<IActionResult> ChangeProfilePassword(string oldPassword, string newPassword)
@@ -37,6 +53,13 @@ namespace WebAPI.Controllers
             return result ? NoContent() : BadRequest(Messages.NotCompleted);
         }
 
+        /// <summary>
+        /// Represent user info
+        /// </summary>
+        /// <response code="200">All OK</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<UserDTO>> GetProfileInfo()

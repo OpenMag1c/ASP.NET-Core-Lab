@@ -17,6 +17,13 @@ namespace WebAPI.Controllers
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Authorization by email and password
+        /// </summary>
+        /// <response code="200">Authorized</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Oops!</response>
         [HttpPost("sign-in")]
         [AllowAnonymous]
         public async Task<IActionResult> SignIn([FromBody] UserCredentialsDTO userCredentialsDto)
@@ -26,6 +33,12 @@ namespace WebAPI.Controllers
             return jwt is null ? Unauthorized(Messages.WrongPasswordOrEmail): Ok(jwt);
         }
 
+        /// <summary>
+        /// Registration by email and password
+        /// </summary>
+        /// <response code="200">Registration completed</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="500">Oops!</response>
         [HttpPost("sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] UserCredentialsDTO userCredentialsDto)
@@ -35,6 +48,13 @@ namespace WebAPI.Controllers
             return result ? Ok(Messages.AllOK) : BadRequest(Messages.NotCompleted);
         }
 
+        /// <summary>
+        /// Registration by email and password
+        /// </summary>
+        /// <response code="200">Registration completed</response>
+        /// <response code="204">Email confirmed</response>
+        /// <response code="400">Email unconfirmed</response>
+        /// <response code="500">Oops!</response>
         [HttpGet("email-confirmation")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(int id, string token)
