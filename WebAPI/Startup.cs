@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Text;
+using Business.Helper;
 using Business.Interfaces;
 using Business.JWT;
 using Business.Services;
@@ -95,6 +96,8 @@ namespace WebAPI
             services.AddControllers();
             services.AddSingleton(Log.Logger);
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<EmailService>();
+            services.AddScoped<UserHelpers>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
             services.AddSwaggerGen(c =>

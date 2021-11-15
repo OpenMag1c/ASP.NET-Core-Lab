@@ -18,7 +18,7 @@ namespace Business.JWT
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
-        public JwtGenerator(IConfiguration config, UserManager<User> userManager, IConfiguration configuration)
+        public JwtGenerator(UserManager<User> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -28,26 +28,28 @@ namespace Business.JWT
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName)
             };
 
             var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role));
+            }
 
-            claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
-
-            // get options
             var jwtAppSettingOptions = _configuration.GetSection("JwtIssuerOptions");
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAppSettingOptions["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(jwtAppSettingOptions["JwtExpireDays"]));
-
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(jwtAppSettingOptions["JwtExpireMinutes"]));
             var token = new JwtSecurityToken(
                 jwtAppSettingOptions["JwtIssuer"],
-                jwtAppSettingOptions["JwtIssuer"],
+                jwtAppSettingOptions["JwtAudience"],
                 claims,
                 expires: expires,
-                signingCredentials: creds
+                signingCredentials: creds,
+                notBefore: DateTime.Now
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

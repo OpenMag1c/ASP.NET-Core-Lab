@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using Business.DTO;
-using DAL.Models;
 
 namespace Business.Interfaces
 {
     public interface IUserService
     {
-        UserCredentialsDTO GetUserById(int? id);
-        void Register(UserCredentialsDTO user);
         List<string> GetUserLogins();
+        Task<UserDTO> UpdateUserAsync(string userId, UserDTO userDto);
+        Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
+        string GetUserDtoStr(UserDTO userDto);
+        Task<UserDTO> GetProfileInfoAsync(string userId);
     }
 }

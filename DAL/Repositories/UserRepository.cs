@@ -19,32 +19,14 @@ namespace DAL.Repositories
             _userManager = userManager;
         }
 
-        public User Get(int id)
-        {
-            return _db.Users.Find(id);
-        }
-
         public IQueryable<User> GetAllUsers()
         {
             return _userManager.Users;
         }
 
-        public Task<User> FindUserByNameAsync(string name)
-        {
-            var result = _userManager.FindByNameAsync(name);
-            return result;
-        }
-
         public void Dispose()
         {
             _db?.Dispose();
-        }
-
-        public void RegisterUser(User user)
-        {
-            // добавляем пользователя
-            _userManager.CreateAsync(user, user.PasswordHash);
-            _db.SaveChanges();
         }
     }
 }
