@@ -2,29 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
-using WebAPI.Pages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WebAPI.ErrorResponse;
 
 namespace WebAPI.Controllers
 {
     [AllowAnonymous]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class ErrorsController : ControllerBase
+    public class ErrorsController : Controller
     {
         [Route("error")]
-        public MyErrorResponse Error()
+        public ActionResult<MyErrorResponse> Error()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var exception = context.Error; // Your exception
-            var code = 500; // Internal Server Error by default
+            var exception = context.Error;
+            var code = 500;
 
             if (exception is HttpStatusException httpException)
             {
                 code = (int)httpException.Status;
+                Response.StatusCode = code;
+                return new MyErrorResponse(exception);
             }
 
-            Response.StatusCode = code; // You can use HttpStatusCode enum instead
+            Response.StatusCode = code;
 
-            return new MyErrorResponse(exception); // Your error model
+            return View("~/Views/Error.cshtml");
         }
     }
 }

@@ -5,7 +5,6 @@ using Business.Helper;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
-using WebAPI.Pages;
 
 namespace WebAPI.Controllers
 {

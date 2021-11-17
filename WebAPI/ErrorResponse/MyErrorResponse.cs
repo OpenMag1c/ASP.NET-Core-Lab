@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace WebAPI.Pages
+namespace WebAPI.ErrorResponse
 {
     public class MyErrorResponse
     {
-        public string Type { get; set; }
+        public string Type {    get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
 

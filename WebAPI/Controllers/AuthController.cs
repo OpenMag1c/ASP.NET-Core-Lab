@@ -3,8 +3,8 @@ using Business.DTO;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Serilog;
-using WebAPI.Pages;
 
 namespace WebAPI.Controllers
 {
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> SignUp([FromBody] UserCredentialsDTO userCredentialsDto)
         {
             await _authenticationService.SignUpAsync(userCredentialsDto);
-            
+
             return Ok();
         }
 

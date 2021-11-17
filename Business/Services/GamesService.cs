@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.ExceptionMiddleware;
@@ -58,6 +59,84 @@ namespace Business.Services
             }
 
             return neededProducts;
+        }
+
+        public ProductDTO FindProductById(int id)
+        {
+            if (id <= 0)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
+            }
+
+            var products = _repo.GetAll().ToArray();
+            var neededProduct = _mapper.Map<ProductDTO>(products.FirstOrDefault(prod => prod.Id == id));
+            if (neededProduct is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+            }
+
+            return neededProduct;
+        }
+
+        public async Task<ProductDTO> AddNewProductAsync(ProductDTO productDto)
+        {
+            if (productDto is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
+            }
+
+            var newProduct = _mapper.Map<Product>(productDto);
+            var result = await _repo.AddNewAsync(newProduct);
+            if (result is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+            }
+
+            var resultDto = _mapper.Map<ProductDTO>(result);
+
+            return resultDto;
+        }
+
+        public async Task<ProductDTO> UpdateProductAsync(ProductDTO productDto)
+        {
+            if (productDto is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
+            }
+
+            var products = _repo.GetAll().ToArray();
+            var oldProduct = products.FirstOrDefault(prod => prod.Name == productDto.Name);
+            if (oldProduct is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+            }
+
+            var newProduct = _mapper.Map(productDto, oldProduct);
+            var result = await _repo.UpdateAsync(newProduct);
+            var resultDto = _mapper.Map<ProductDTO>(result);
+
+            return resultDto;
+        }
+
+        public async void DeleteProductAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
+            }
+
+            var products = _repo.GetAll().ToArray();
+            var deletedProduct = products.FirstOrDefault(prod => prod.Id == id);
+            if (deletedProduct is null)
+            {
+                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+            }
+
+            var result = await _repo.DeleteAsync(deletedProduct);
+            if (!result)
+            {
+                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+            }
         }
     }
 }

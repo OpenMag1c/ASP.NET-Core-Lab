@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Business.DTO;
+using DAL.Enum;
 using DAL.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace WebAPI.AutoMapper
 {
@@ -30,7 +30,8 @@ namespace WebAPI.AutoMapper
                 .ForMember(dest => dest.PhoneNumber, source => source.MapFrom(source => source.PhoneNumber));
             CreateMap<ProductDTO, Product>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(source => source.Name))
-                .ForMember(dest => dest.Platform, source => source.MapFrom(source => source.Platform));
+                .ForMember(dest => dest.Platform, source => source.MapFrom(source => (Platforms)source.Platform));
+
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(source => source.Name))
                 .ForMember(dest => dest.Platform, source => source.MapFrom(source => source.Platform));
