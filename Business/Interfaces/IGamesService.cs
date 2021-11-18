@@ -7,10 +7,10 @@ namespace Business.Interfaces
     public interface IGamesService
     {
         public IEnumerable<PlatformDTO> GetTopThreePlatforms();
-        public IEnumerable<ProductDTO> SearchProductsByTerm(string term, int limit, int offset);
-        public ProductDTO FindProductById(int id);
-        public Task<ProductDTO> AddNewProductAsync(ProductDTO productDto);
-        public Task<ProductDTO> UpdateProductAsync(ProductDTO productDto);
+        public IEnumerable<ProductOutputDTO> SearchProductsByTerm(string term, int limit, int offset);
+        public ProductOutputDTO FindProductById(int id);
+        public Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto);
+        public Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto);
         public void DeleteProductAsync(int id);
     }
 }

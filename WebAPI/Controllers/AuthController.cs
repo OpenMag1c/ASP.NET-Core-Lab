@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        /// Registration by email and password
+        /// Email confirmation
         /// </summary>
         /// <response code="200">Registration completed</response>
         /// <response code="204">Email confirmed</response>

@@ -6,6 +6,8 @@ using AutoMapper;
 using Business.DTO;
 using Business.ExceptionMiddleware;
 using Business.Interfaces;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using DAL.Interfaces;
 using DAL.Models;
 
@@ -15,11 +17,13 @@ namespace Business.Services
     {
         private readonly IRepository<Product> _repo;
         private readonly IMapper _mapper;
+        private readonly Cloudinary _cloudinary;
 
-        public GamesService(IRepository<Product> repo, IMapper mapper)
+        public GamesService(IRepository<Product> repo, IMapper mapper, Cloudinary cloudinary)
         {
             _repo = repo;
             _mapper = mapper;
+            _cloudinary = cloudinary;
         }
 
         public IEnumerable<PlatformDTO> GetTopThreePlatforms()
@@ -38,9 +42,9 @@ namespace Business.Services
             return sortedProducts;
         }
 
-        public IEnumerable<ProductDTO> SearchProductsByTerm(string term, int limit, int offset)
+        public IEnumerable<ProductOutputDTO> SearchProductsByTerm(string term, int limit, int offset)
         {
-            if (term == null)
+            if (term is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
             }
@@ -51,9 +55,9 @@ namespace Business.Services
                 products.Where(prod => prod.Name.ToLower().Contains(term))
                     .Skip(offset)
                     .Take(limit)
-                    .Select(prod => _mapper.Map<ProductDTO>(prod));
+                    .Select(prod => _mapper.Map<ProductOutputDTO>(prod));
 
-            if (neededProducts == null)
+            if (neededProducts is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
@@ -61,7 +65,7 @@ namespace Business.Services
             return neededProducts;
         }
 
-        public ProductDTO FindProductById(int id)
+        public ProductOutputDTO FindProductById(int id)
         {
             if (id <= 0)
             {
@@ -69,7 +73,7 @@ namespace Business.Services
             }
 
             var products = _repo.GetAll().ToArray();
-            var neededProduct = _mapper.Map<ProductDTO>(products.FirstOrDefault(prod => prod.Id == id));
+            var neededProduct = _mapper.Map<ProductOutputDTO>(products.FirstOrDefault(prod => prod.Id == id));
             if (neededProduct is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
@@ -78,42 +82,45 @@ namespace Business.Services
             return neededProduct;
         }
 
-        public async Task<ProductDTO> AddNewProductAsync(ProductDTO productDto)
+        public async Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto)
         {
-            if (productDto is null)
+            if (productInputDto is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
             }
 
-            var newProduct = _mapper.Map<Product>(productDto);
-            var result = await _repo.AddNewAsync(newProduct);
+            var newProduct = _mapper.Map<Product>(productInputDto);
+            var result = await _repo.AddAsync(newProduct);
+            await UploadProductImagesAsync(productInputDto, result);
+            await _repo.UpdateAsync(result);
             if (result is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
             }
 
-            var resultDto = _mapper.Map<ProductDTO>(result);
+            var resultDto = _mapper.Map<ProductOutputDTO>(result);
 
             return resultDto;
         }
 
-        public async Task<ProductDTO> UpdateProductAsync(ProductDTO productDto)
+        public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
         {
-            if (productDto is null)
+            if (productInputDto is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
             }
 
             var products = _repo.GetAll().ToArray();
-            var oldProduct = products.FirstOrDefault(prod => prod.Name == productDto.Name);
+            var oldProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
             if (oldProduct is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var newProduct = _mapper.Map(productDto, oldProduct);
+            var newProduct = _mapper.Map(productInputDto, oldProduct);
+            await UploadProductImagesAsync(productInputDto, newProduct);
             var result = await _repo.UpdateAsync(newProduct);
-            var resultDto = _mapper.Map<ProductDTO>(result);
+            var resultDto = _mapper.Map<ProductOutputDTO>(result);
 
             return resultDto;
         }
@@ -136,6 +143,29 @@ namespace Business.Services
             if (!result)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+            }
+        }
+
+        private async Task UploadProductImagesAsync(ProductInputDTO productInputDto, Product product)
+        {
+            if (productInputDto.Logo is not null)
+            {
+                var logoDownloadResult = await _cloudinary.UploadAsync(new ImageUploadParams()
+                {
+                    File = new FileDescription("logo" + product.Id, productInputDto.Logo.OpenReadStream())
+                });
+
+                product.Logo = logoDownloadResult.Url.AbsolutePath;
+            }
+
+            if (productInputDto.Background is not null)
+            {
+                var backgroundDownloadResult = await _cloudinary.UploadAsync(new ImageUploadParams()
+                {
+                    File = new FileDescription("background" + product.Id, productInputDto.Background.OpenReadStream())
+                });
+
+                product.Background = backgroundDownloadResult.Url.AbsolutePath;
             }
         }
     }

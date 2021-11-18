@@ -24,7 +24,7 @@ namespace DAL.Repositories
             return _userManager.Users;
         }
 
-        public Task<User> AddNewAsync(User item)
+        public Task<User> AddAsync(User item)
         {
             throw new NotImplementedException();
         }

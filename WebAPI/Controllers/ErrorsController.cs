@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
     public class ErrorsController : Controller
     {
         [Route("error")]
-        public ActionResult<MyErrorResponse> Error()
+        public ActionResult<ErrorResponse.ErrorResponse> Error()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var exception = context.Error;
@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
             {
                 code = (int)httpException.Status;
                 Response.StatusCode = code;
-                return new MyErrorResponse(exception);
+                return new ErrorResponse.ErrorResponse(exception);
             }
 
             Response.StatusCode = code;

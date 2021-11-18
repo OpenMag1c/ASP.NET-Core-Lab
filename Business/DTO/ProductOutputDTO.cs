@@ -3,13 +3,12 @@ using DAL.Enum;
 
 namespace Business.DTO
 {
-    public class ProductDTO
+    public class ProductOutputDTO
     {
         /// <summary> 
         /// Product name 
         /// </summary> 
         /// <example>"My Best Game"</example>
-        [Required]
         public string Name { get; set; }
 
         /// <summary> 
@@ -20,8 +19,7 @@ namespace Business.DTO
         /// Mobile; 
         /// Console; 
         /// </example>
-        [Required]
-        public int Platform { get; set; }
+        public string Platform { get; set; }
 
         /// <summary> 
         /// Product creating data
@@ -53,7 +51,7 @@ namespace Business.DTO
         /// <example> 
         /// 7
         /// </example>
-        public Ratings Rating { get; set; }
+        public string Rating { get; set; }
 
         /// <summary> 
         /// Image-logo

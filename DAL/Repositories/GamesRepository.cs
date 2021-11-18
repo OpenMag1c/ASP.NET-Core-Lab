@@ -20,7 +20,7 @@ namespace DAL.Repositories
             return _db.Products;
         }
 
-        public async Task<Product> AddNewAsync(Product item)
+        public async Task<Product> AddAsync(Product item)
         {
             await _db.Products.AddAsync(item);
             await _db.SaveChangesAsync();

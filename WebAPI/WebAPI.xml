@@ -54,7 +54,7 @@
             <response code="400">Wrong params format</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.AddNewProduct(Business.DTO.ProductDTO)">
+        <member name="M:WebAPI.Controllers.GamesController.AddProduct(Business.DTO.ProductInputDTO)">
             <summary>
             Add product, only for admin
             </summary>
@@ -62,7 +62,7 @@
             <response code="400">Wrong params format</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.UpdateProduct(Business.DTO.ProductDTO)">
+        <member name="M:WebAPI.Controllers.GamesController.UpdateProduct(Business.DTO.ProductInputDTO)">
             <summary>
             Update product, only for admin
             </summary>

@@ -2,13 +2,13 @@
 
 namespace WebAPI.ErrorResponse
 {
-    public class MyErrorResponse
+    public class ErrorResponse
     {
         public string Type {    get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
 
-        public MyErrorResponse(Exception ex)
+        public ErrorResponse(Exception ex)
         {
             Type = ex.GetType().Name;
             Message = ex.Message;

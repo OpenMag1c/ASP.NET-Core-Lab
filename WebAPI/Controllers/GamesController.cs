@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("search")]
         [AllowAnonymous]
-        public IEnumerable<ProductDTO> SearchProducts(string term, int limit, int offset)
+        public IEnumerable<ProductOutputDTO> SearchProducts(string term, int limit, int offset)
         {
             var result = _gamesService.SearchProductsByTerm(term, limit, offset);
 
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("id")]
         [AllowAnonymous]
-        public ActionResult<ProductDTO> FindProductById(int id)
+        public ActionResult<ProductOutputDTO> FindProductById(int id)
         {
             var result = _gamesService.FindProductById(id);
 
@@ -71,9 +71,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<ProductDTO>> AddNewProduct([FromBody] ProductDTO productDto)
+        public async Task<ActionResult<ProductOutputDTO>> AddProduct([FromForm] ProductInputDTO productInputDto)
         {
-            var result = await _gamesService.AddNewProductAsync(productDto);
+            var result = await _gamesService.AddProductAsync(productInputDto);
             Response.StatusCode = 201;
 
             return result;
@@ -89,9 +89,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPut]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<ProductDTO>> UpdateProduct([FromBody] ProductDTO productDto)
+        public async Task<ActionResult<ProductOutputDTO>> UpdateProduct([FromForm] ProductInputDTO productInputDto)
         {
-            var updatedProductDto = await _gamesService.UpdateProductAsync(productDto);
+            var updatedProductDto = await _gamesService.UpdateProductAsync(productInputDto);
 
             return updatedProductDto;
         }
