@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Business.DTO;
+using Business.Helper;
 using Business.Interfaces;
+using Business.Models;
 using DAL.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -108,9 +110,59 @@ namespace WebAPI.Controllers
         [Authorize(Roles = Roles.Admin)]
         public IActionResult DeleteProduct(int id)
         {
-            _gamesService.DeleteProductAsync(id);
+            _gamesService.DeleteProduct(id);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Edit product rating, you must be authenticated 
+        /// </summary>
+        /// <response code="201">All OK</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="500">Oops!</response>
+        [HttpPost("rating")]
+        [Authorize]
+        public async Task<ActionResult<ProductOutputDTO>> EditRating([FromForm] string productName, [FromForm] int rating)
+        {
+            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+            var productOutputDto = await _gamesService.EditProductRatingAsync(userId, productName, rating);
+
+            return productOutputDto;
+        }
+
+        /// <summary>
+        /// Delete product rating, you must be authenticated 
+        /// </summary>
+        /// <response code="204">Rating deleted</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="403">No access</response>
+        /// <response code="500">Oops!</response>
+        [HttpDelete("rating")]
+        [Authorize]
+        public async Task<IActionResult> DeleteRating(int productId)
+        {
+            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+            await _gamesService.DeleteRatingAsync(userId, productId);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Get products with sorting and filtering
+        /// </summary>
+        /// <response code="200">All OK</response>
+        /// <response code="400">Wrong params format</response>
+        /// <response code="500">Oops!</response>
+        [HttpGet("list")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [AllowAnonymous]
+        public IEnumerable<ProductOutputDTO> GetProducts([FromQuery] Pagination pagination, [FromQuery]ProductFilters productFilters)
+        {
+            var products = _gamesService.GetProducts(pagination, productFilters);
+
+            return products;
         }
     }
 }

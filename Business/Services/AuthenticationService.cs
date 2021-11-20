@@ -16,12 +16,10 @@ namespace Business.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IMapper _mapper;
-
         private readonly UserManager<User> _userManager;
-
         private readonly IJwtGenerator _jwtGenerator;
-
         private readonly EmailService _emailService;
+
         public AuthenticationService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator, EmailService emailService)
         {
             _mapper = mapper;
@@ -32,7 +30,7 @@ namespace Business.Services
         public async Task<string> SignInAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = await _userManager.FindByEmailAsync(userCredentialsDto.Email);
-            if (user == null)
+            if (user is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.WrongEmail);
             }

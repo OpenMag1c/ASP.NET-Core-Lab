@@ -1,4 +1,6 @@
-﻿namespace DAL.Enum
+﻿using System.Text.Json.Serialization;
+
+namespace DAL.Enum
 {
     public enum Ratings
     {
@@ -6,6 +8,8 @@
         MoreThanSeven = 7,
         MoreThanTwelve = 12,
         MoreThanSixteen = 16,
-        MoreThanEighteen = 18
+        MoreThanEighteen = 18,
+
+        AllAges = 0
     }
 }

@@ -7,19 +7,18 @@ using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _repo;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public UserService(IRepository<User> repo, IMapper mapper, UserManager<User> userManager)
+        public UserService(IMapper mapper, UserManager<User> userManager)
         {
-            _repo = repo;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -27,7 +26,7 @@ namespace Business.Services
         public List<string> GetUserLogins()
         {
             var result = new List<string>();
-            foreach (var user in _repo.GetAll())
+            foreach (var user in _userManager.Users)
             {
                 result.Add(user.UserName);
             }

@@ -23,7 +23,7 @@
         </member>
         <member name="M:WebAPI.Controllers.AuthController.ConfirmEmail(System.Int32,System.String)">
             <summary>
-            Registration by email and password
+            Email confirmation
             </summary>
             <response code="200">Registration completed</response>
             <response code="204">Email confirmed</response>
@@ -82,9 +82,35 @@
             <response code="403">No access</response>
             <response code="500">Oops!</response>
         </member>
+        <member name="M:WebAPI.Controllers.GamesController.EditRating(System.String,System.Int32)">
+            <summary>
+            Edit product rating, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.DeleteRating(System.Int32)">
+            <summary>
+            Delete product rating, you must be authenticated 
+            </summary>
+            <response code="204">Rating deleted</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="403">No access</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.GetProducts(Business.Models.Pagination,Business.Models.ProductFilters)">
+            <summary>
+            Get products with sorting and filtering
+            </summary>
+            <response code="200">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
         <member name="M:WebAPI.Controllers.HomeController.GetInfo">
             <summary>
-            Get all user logins
+            Get all user logins, only for admin
             </summary>
             <response code="200">All OK</response>
             <response code="401">Unauthorized</response>

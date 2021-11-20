@@ -12,7 +12,7 @@ namespace Business.DTO
         /// Mobile; 
         /// Console; 
         /// </example>
-        public string Name { get; set; }
+        public string Platform { get; set; }
 
         /// <summary> 
         /// Product games
