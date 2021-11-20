@@ -3,7 +3,7 @@
 namespace Business.Models
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum AscDesc
+    public enum Sorting
     {
         Asc = 0,
         Desc = 1,

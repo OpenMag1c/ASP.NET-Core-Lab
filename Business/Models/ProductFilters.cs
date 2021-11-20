@@ -8,8 +8,8 @@ namespace Business.Models
 
         public Ratings FilterByAge { get; set; } = Ratings.AllAges;
 
-        public AscDesc SortByRating { get; set; } = AscDesc.Nothing;
+        public Sorting SortByRating { get; set; } = Sorting.Nothing;
 
-        public AscDesc SortByPrice { get; set; } = AscDesc.Nothing;
+        public Sorting SortByPrice { get; set; } = Sorting.Nothing;
     }
 }

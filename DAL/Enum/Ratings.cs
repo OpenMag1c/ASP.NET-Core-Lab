@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace DAL.Enum
+﻿namespace DAL.Enum
 {
     public enum Ratings
     {

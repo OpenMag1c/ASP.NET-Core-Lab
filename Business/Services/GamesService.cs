@@ -51,15 +51,15 @@ namespace Business.Services
 
             products = filters.SortByPrice switch
             {
-                AscDesc.Asc => products.OrderBy(prod => prod.Price),
-                AscDesc.Desc => products.OrderByDescending(prod => prod.Price),
+                Sorting.Asc => products.OrderBy(prod => prod.Price),
+                Sorting.Desc => products.OrderByDescending(prod => prod.Price),
                 _ => products
             };
 
             products = filters.SortByRating switch
             {
-                AscDesc.Asc => products.OrderBy(prod => prod.TotalRating),
-                AscDesc.Desc => products.OrderByDescending(prod => prod.TotalRating),
+                Sorting.Asc => products.OrderBy(prod => prod.TotalRating),
+                Sorting.Desc => products.OrderByDescending(prod => prod.TotalRating),
                 _ => products
             };
 
