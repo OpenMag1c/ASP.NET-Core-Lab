@@ -11,6 +11,7 @@ namespace WebAPI.AutoMapper
             CreateMap<User, UserCredentialsDTO>()
                 .ForMember(dest => dest.Password, source => source.MapFrom(source => source.PasswordHash));
             CreateMap<UserCredentialsDTO, User>()
+                .ForMember(dest => dest.UserName, source => source.MapFrom(source => source.Email))
                 .ForMember(dest => dest.PasswordHash, source => source.MapFrom(source => source.Password));
             CreateMap<ProductInputDTO, Product>()
                 .ForMember(dest => dest.Logo, opt => opt.Ignore())

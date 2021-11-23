@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected ApplicationDbContext DbContext;
 
@@ -35,6 +35,5 @@ namespace DAL.Repositories
         public void Update(T entity) => DbContext.Set<T>().Update(entity);
         public void Delete(T entity) => DbContext.Set<T>().Remove(entity);
         public void Save() => DbContext.SaveChanges();
-
     }
 }

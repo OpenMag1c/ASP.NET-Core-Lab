@@ -13,32 +13,35 @@ using CloudinaryDotNet.Actions;
 using DAL.Enum;
 using DAL.Interfaces;
 using DAL.Models;
-using DAL.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
     public class GamesService : IGamesService
     {
-        private readonly ProductRepository _productRepo;
+        private readonly IRepositoryBase<Product> _productRepo;
         private readonly IMapper _mapper;
         private readonly Cloudinary _cloudinary;
-        private readonly UserManager<User> _userManager;
 
-        public GamesService(IRepositoryManager repo, UserManager<User> userManager, IMapper mapper, Cloudinary cloudinary)
+        public GamesService(IRepositoryBase<Product> productRepo, IMapper mapper, Cloudinary cloudinary)
         {
-            _productRepo = repo.Product;
+            _productRepo = productRepo;
             _mapper = mapper;
             _cloudinary = cloudinary;
-            _userManager = userManager;
         }
 
         public IEnumerable<ProductOutputDTO> GetProducts(Pagination pagination, ProductFilters filters)
         {
+            var products = _productRepo.FindAll(false);
+            products = FilterProducts(products, filters);
+            var pagedList = PagedProducts<Product>.ToPagedList(products, pagination.PageNumber, pagination.PageSize);
+            var result = pagedList.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            return result;
+        }
+
+        private IQueryable<Product> FilterProducts(IQueryable<Product> products, ProductFilters filters)
+        {
             var genre = filters.FilterByGenre;
             var age = filters.FilterByAge;
-            var products = _productRepo.FindAll(false);
             if (genre != Genres.AllGenres)
             {
                 products = products.Where(prod => prod.Genre == genre);
@@ -63,9 +66,7 @@ namespace Business.Services
                 _ => products
             };
 
-            var pagedList = PagedList<Product>.ToPagedList(products, pagination.PageNumber, pagination.PageSize);
-            var result = pagedList.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
-            return result;
+            return products;
         }
 
         public IEnumerable<PlatformDTO> GetTopThreePlatforms()
@@ -107,41 +108,6 @@ namespace Business.Services
             return neededProducts;
         }
 
-        public async Task<ProductOutputDTO> EditProductRatingAsync(string userId, string productName, int rating)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
-            }
-
-            var products = _productRepo.FindAll(true)
-                .Include(u => u.Ratings)
-                .ToArray();
-            var product = products.FirstOrDefault(prod => prod.Name == productName);
-            if (product is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
-            }
-
-            var oldRating = product.Ratings.FirstOrDefault(rate => rate.User == user);
-            if (oldRating is not null)
-            {
-                oldRating.Rating = rating;
-            }
-            else
-            {
-                var productRating = new ProductRating { Product = product, User = user, Rating = rating };
-                product.Ratings.Add(productRating);
-            }
-
-            RecalculateTotalRating(ref product);
-            _productRepo.Save();
-            var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
-
-            return productOutputDto;
-        }
-
         public ProductOutputDTO FindProductById(int id)
         {
             if (id <= 0)
@@ -180,34 +146,6 @@ namespace Business.Services
             var resultDto = _mapper.Map<ProductOutputDTO>(newProduct);
 
             return resultDto;
-        }
-
-        public async Task DeleteRatingAsync(string userId, int productId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
-            }
-
-            var products = _productRepo.FindAll(true)
-                .Include(u => u.Ratings)
-                .ToArray();
-            var product = products.FirstOrDefault(prod => prod.Id == productId);
-            if (product is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
-            }
-
-            var productRating = product.Ratings.FirstOrDefault(rate => rate.User == user);
-            var result = product.Ratings.Remove(productRating);
-            if (!result)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.NotCompleted);
-            }
-
-            RecalculateTotalRating(ref product);
-            _productRepo.Save();
         }
 
         public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
@@ -272,13 +210,6 @@ namespace Business.Services
 
                 product.Background = backgroundDownloadResult.Url.AbsolutePath;
             }
-        }
-
-        public void RecalculateTotalRating(ref Product product)
-        {
-            var ratingsCount = product.Ratings.Count;
-            product.TotalRating = ratingsCount != 0 ? product.Ratings.Sum(rating => rating.Rating) / ratingsCount : 0;
-            _productRepo.Update(product);
         }
     }
 }

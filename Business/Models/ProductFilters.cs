@@ -4,12 +4,12 @@ namespace Business.Models
 {
     public class ProductFilters
     {
-        public Genres FilterByGenre { get; set; } = Genres.AllGenres;
+        public Genres FilterByGenre { get; set; }
 
-        public Ratings FilterByAge { get; set; } = Ratings.AllAges;
+        public Ratings FilterByAge { get; set; }
 
-        public Sorting SortByRating { get; set; } = Sorting.Nothing;
+        public Sorting SortByRating { get; set; }
 
-        public Sorting SortByPrice { get; set; } = Sorting.Nothing;
+        public Sorting SortByPrice { get; set; }
     }
 }

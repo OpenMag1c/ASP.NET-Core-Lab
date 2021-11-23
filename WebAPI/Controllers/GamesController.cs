@@ -14,10 +14,12 @@ namespace WebAPI.Controllers
     public class GamesController : BaseController
     {
         private readonly IGamesService _gamesService;
+        private readonly IRatingService _ratingService;
 
-        public GamesController(ILogger logger, IGamesService gamesService) : base(logger)
+        public GamesController(ILogger logger, IGamesService gamesService, IRatingService ratingService) : base(logger)
         {
             _gamesService = gamesService;
+            _ratingService = ratingService;
         }
 
         /// <summary>
@@ -123,10 +125,10 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPost("rating")]
         [Authorize]
-        public async Task<ActionResult<ProductOutputDTO>> EditRating([FromForm] string productName, [FromForm] int rating)
+        public async Task<ActionResult<ProductOutputDTO>> EditRating([FromForm] int productId, [FromForm] int rating)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            var productOutputDto = await _gamesService.EditProductRatingAsync(userId, productName, rating);
+            var productOutputDto = _ratingService.EditProductRating(userId, productId, rating);
 
             return productOutputDto;
         }
@@ -144,7 +146,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> DeleteRating(int productId)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            await _gamesService.DeleteRatingAsync(userId, productId);
+            _ratingService.DeleteRating(userId, productId);
 
             return NoContent();
         }
