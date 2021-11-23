@@ -3,6 +3,7 @@ using Business.Interfaces;
 using Business.Services;
 using DAL.Database;
 using DAL.Interfaces;
+using DAL.Models;
 using DAL.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -18,7 +19,9 @@ namespace WebAPI.Infrastructure
             services.AddScoped<EmailService>();
             services.AddScoped<ImagesUrls>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IRepositoryManager, RepositoryManager>();
+            services.AddScoped(typeof(IRepositoryBase<Product>), typeof(RepositoryBase<Product>));
+            services.AddScoped(typeof(IRepositoryBase<ProductRating>), typeof(RepositoryBase<ProductRating>));
+            services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGamesService, GamesService>();
             services.AddRouting(options => options.LowercaseUrls = true);

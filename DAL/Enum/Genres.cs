@@ -13,6 +13,6 @@ namespace DAL.Enum
         MusicGame,
         RPG,
 
-        AllGenres = -1
+        AllGenres = 0
     }
 }

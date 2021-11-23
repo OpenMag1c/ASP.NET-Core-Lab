@@ -82,7 +82,7 @@
             <response code="403">No access</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.EditRating(System.String,System.Int32)">
+        <member name="M:WebAPI.Controllers.GamesController.EditRating(System.Int32,System.Int32)">
             <summary>
             Edit product rating, you must be authenticated 
             </summary>
