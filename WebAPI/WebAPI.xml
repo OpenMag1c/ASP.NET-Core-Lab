@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:WebAPI.Controllers.AuthController.SignIn(Business.DTO.UserCredentialsDTO)">
+            <summary>
+            Authorization by email and password
+            </summary>
+            <response code="200">Authorized</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthController.SignUp(Business.DTO.UserCredentialsDTO)">
+            <summary>
+            Registration by email and password
+            </summary>
+            <response code="200">Registration completed</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthController.ConfirmEmail(System.Int32,System.String)">
+            <summary>
+            Registration by email and password
+            </summary>
+            <response code="200">Registration completed</response>
+            <response code="204">Email confirmed</response>
+            <response code="400">Email unconfirmed</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.GetTopPlatforms">
+            <summary>
+            Represent three top platforms by number of games
+            </summary>
+            <response code="200">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.SearchProducts(System.String,System.Int32,System.Int32)">
+            <summary>
+            Search products by name
+            </summary>
+            <response code="200">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.HomeController.GetInfo">
+            <summary>
+            Get all user logins
+            </summary>
+            <response code="200">All OK</response>
+            <response code="401">Unauthorized</response>
+            <response code="403">Access denied</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.UserController.UpdateProfile(Business.DTO.UserDTO)">
+            <summary>
+            Update user profile by model
+            </summary>
+            <response code="200">Profile updated</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.UserController.ChangeProfilePassword(System.String,System.String)">
+            <summary>
+            Update user password
+            </summary>
+            <response code="200">Profile updated</response>
+            <response code="204">Profile password updated</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.UserController.GetProfileInfo">
+            <summary>
+            Represent user info
+            </summary>
+            <response code="200">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="500">Oops!</response>
+        </member>
+    </members>
+</doc>

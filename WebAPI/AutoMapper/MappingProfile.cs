@@ -28,6 +28,12 @@ namespace WebAPI.AutoMapper
                 .ForMember(dest => dest.Age, source => source.MapFrom(source => source.Age))
                 .ForMember(dest => dest.AddressDelivery, source => source.MapFrom(source => source.AddressDelivery))
                 .ForMember(dest => dest.PhoneNumber, source => source.MapFrom(source => source.PhoneNumber));
+            CreateMap<ProductDTO, Product>()
+                .ForMember(dest => dest.Name, source => source.MapFrom(source => source.Name))
+                .ForMember(dest => dest.Platform, source => source.MapFrom(source => source.Platform));
+            CreateMap<Product, ProductDTO>()
+                .ForMember(dest => dest.Name, source => source.MapFrom(source => source.Name))
+                .ForMember(dest => dest.Platform, source => source.MapFrom(source => source.Platform));
         }
     }
 }
