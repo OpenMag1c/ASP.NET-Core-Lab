@@ -1,6 +1,6 @@
 ﻿namespace Business.ExceptionMiddleware
 {
-    public class Messages
+    public static class Messages
     {
         public const string AllOK = "All OK.";
         public const string WrongPasswordOrEmail = "Wrong password or email.";

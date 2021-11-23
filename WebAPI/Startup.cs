@@ -21,6 +21,8 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCloudinary(Configuration);
+
             services.AddDatabase();
 
             services.AddJwtToken(Configuration);
@@ -28,6 +30,8 @@ namespace WebAPI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddHealthCheck(Configuration.GetConnectionString("DefaultConnection"));
+
+            services.AddRazorPages();
 
             services.AddServicesCollection();
 
@@ -47,9 +51,12 @@ namespace WebAPI
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseStaticFiles();
 
+            app.UseRouting();
+            
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseSerilogRequestLogging();
@@ -58,6 +65,7 @@ namespace WebAPI
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc");
+                endpoints.MapRazorPages();
             });
         }
     }

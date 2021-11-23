@@ -24,6 +24,21 @@ namespace DAL.Repositories
             return _userManager.Users;
         }
 
+        public Task<User> AddAsync(User item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> UpdateAsync(User item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(User item)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             _db?.Dispose();

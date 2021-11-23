@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        /// Get all user logins
+        /// Get all user logins, only for admin
         /// </summary>
         /// <response code="200">All OK</response>
         /// <response code="401">Unauthorized</response>

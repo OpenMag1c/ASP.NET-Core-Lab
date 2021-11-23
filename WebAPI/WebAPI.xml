@@ -46,6 +46,42 @@
             <response code="400">Wrong params format</response>
             <response code="500">Oops!</response>
         </member>
+        <member name="M:WebAPI.Controllers.GamesController.FindProductById(System.Int32)">
+            <summary>
+            Find product by Id
+            </summary>
+            <response code="200">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.AddProduct(Business.DTO.ProductInputDTO)">
+            <summary>
+            Add product, only for admin
+            </summary>
+            <response code="201">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.UpdateProduct(Business.DTO.ProductInputDTO)">
+            <summary>
+            Update product, only for admin
+            </summary>
+            <response code="200">Product updated</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="403">No access</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.GamesController.DeleteProduct(System.Int32)">
+            <summary>
+            Delete product, only for admin
+            </summary>
+            <response code="204">Product deleted</response>
+            <response code="400">Wrong params format</response>
+            <response code="401">Unauthorized</response>
+            <response code="403">No access</response>
+            <response code="500">Oops!</response>
+        </member>
         <member name="M:WebAPI.Controllers.HomeController.GetInfo">
             <summary>
             Get all user logins
