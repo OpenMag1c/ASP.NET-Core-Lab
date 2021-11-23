@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Infrastructure;
+using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,15 @@ namespace DAL.Database
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Product>().HasIndex(u => new {u.DateCreated, u.Name, u.Platform, u.TotalRating});
-            modelBuilder.Entity<Product>().HasData(SeedDbProducts.GetSeedProducts());
+
+            modelBuilder.ApplyConfiguration(new ProductRatingConfiguration());
+
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
         }
     }
 }

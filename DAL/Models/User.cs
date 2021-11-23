@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Models
 {
@@ -6,5 +7,11 @@ namespace DAL.Models
     {
         public int Age { get; set; }
         public string AddressDelivery { get; set; }
+        public ICollection<ProductRating> Ratings { get; set; }
+
+        public User()
+        {
+            Ratings = new List<ProductRating>();
+        }
     }
 }

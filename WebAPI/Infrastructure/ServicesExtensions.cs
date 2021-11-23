@@ -1,4 +1,5 @@
-﻿using Business.Interfaces;
+﻿using Business.Helper;
+using Business.Interfaces;
 using Business.Services;
 using DAL.Database;
 using DAL.Interfaces;
@@ -15,14 +16,16 @@ namespace WebAPI.Infrastructure
         {
             services.AddControllers();
             services.AddSingleton(Log.Logger);
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IGamesService, GamesService>();
             services.AddScoped<EmailService>();
             services.AddScoped<ImagesUrls>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
-            services.AddScoped(typeof(IRepository<Product>), typeof(GamesRepository));
+            services.AddScoped(typeof(IRepositoryBase<Product>), typeof(RepositoryBase<Product>));
+            services.AddScoped(typeof(IRepositoryBase<ProductRating>), typeof(RepositoryBase<ProductRating>));
+            services.AddScoped<IRatingService, RatingService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGamesService, GamesService>();
             services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddScoped<ValidationFilterAttribute>();
 
             return services;
         }

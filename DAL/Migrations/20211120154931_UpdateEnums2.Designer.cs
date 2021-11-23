@@ -4,14 +4,16 @@ using DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211120154931_UpdateEnums2")]
+    partial class UpdateEnums2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,8 +37,8 @@ namespace DAL.Migrations
                     b.Property<int>("DateCreated")
                         .HasColumnType("int");
 
-                    b.Property<int>("Genre")
-                        .HasColumnType("int");
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
@@ -69,7 +71,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 50,
                             DateCreated = 2018,
-                            Genre = 0,
+                            Genre = "ActionRPG",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Horizon_Zero_Dawn_mpnuy7.jpg",
                             Name = "Horizon Zero Dawn",
                             Platform = 1,
@@ -83,7 +85,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 100,
                             DateCreated = 2016,
-                            Genre = 1,
+                            Genre = "Shooter",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Counter_Strike_tkkgm4.jpg",
                             Name = "Counter Strike GO",
                             Platform = 0,
@@ -97,7 +99,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 500,
                             DateCreated = 2017,
-                            Genre = 4,
+                            Genre = "MOBA",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Brawl_Stars_jwhuv1.jpg",
                             Name = "Brawl Stars",
                             Platform = 2,
@@ -111,7 +113,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 25,
                             DateCreated = 2020,
-                            Genre = 1,
+                            Genre = "Shooter",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Half_Life_t0lcqj.jpg",
                             Name = "Half-Life VR",
                             Platform = 4,
@@ -125,7 +127,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 90,
                             DateCreated = 2008,
-                            Genre = 6,
+                            Genre = "RPG",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Skyrim_b3rdpm.jpg",
                             Name = "TES V Skyrim",
                             Platform = 0,
@@ -139,7 +141,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 200,
                             DateCreated = 2015,
-                            Genre = 2,
+                            Genre = "Strategy",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Clash_Royale_oipsjp.jpg",
                             Name = "Clash Royale",
                             Platform = 2,
@@ -153,7 +155,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 75,
                             DateCreated = 2017,
-                            Genre = 5,
+                            Genre = "MusicGame",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Beat_Saber_ubvkuu.jpg",
                             Name = "Beat Saber",
                             Platform = 4,
@@ -167,7 +169,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 40,
                             DateCreated = 2011,
-                            Genre = 6,
+                            Genre = "RPG",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Terraria_uzjoxt.jpg",
                             Name = "Terraria",
                             Platform = 0,
@@ -181,7 +183,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 700,
                             DateCreated = 2020,
-                            Genre = 0,
+                            Genre = "ActionRPG",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Genshin_Impact_x0fd6d.jpg",
                             Name = "Genshin Impact",
                             Platform = 0,
@@ -195,7 +197,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 999,
                             DateCreated = 2000,
-                            Genre = 3,
+                            Genre = "Puzzle",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Snake_toiezu.jpg",
                             Name = "Snake",
                             Platform = 3,
@@ -209,7 +211,7 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background4.jpg",
                             Count = 120,
                             DateCreated = 2007,
-                            Genre = 1,
+                            Genre = "Shooter",
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Contra_City_r3iefw.jpg",
                             Name = "Contra city",
                             Platform = 3,
