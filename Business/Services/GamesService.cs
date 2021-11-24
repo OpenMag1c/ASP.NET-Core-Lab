@@ -87,11 +87,6 @@ namespace Business.Services
 
         public IEnumerable<ProductOutputDTO> SearchProductsByTerm(string term, int limit, int offset)
         {
-            if (term is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
             var products = _productRepo.FindAll(false).ToArray();
             term = term.ToLower();
             var neededProducts = 
@@ -110,11 +105,6 @@ namespace Business.Services
 
         public ProductOutputDTO FindProductById(int id)
         {
-            if (id <= 0)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
             var products = _productRepo.FindAll(false).ToArray();
             var neededProduct = products.FirstOrDefault(prod => prod.Id == id);
             if (neededProduct is null)
@@ -129,11 +119,6 @@ namespace Business.Services
 
         public async Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto)
         {
-            if (productInputDto is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
             var newProduct = _mapper.Map<Product>(productInputDto);
             _productRepo.Create(newProduct);
             await UploadProductImagesAsync(productInputDto, newProduct);
@@ -150,11 +135,6 @@ namespace Business.Services
 
         public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
         {
-            if (productInputDto is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
             var products = _productRepo.FindAll(true).ToArray();
             var oldProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
             if (oldProduct is null)
@@ -173,11 +153,6 @@ namespace Business.Services
 
         public void DeleteProduct(int id)
         {
-            if (id <= 0)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
             var products = _productRepo.FindAll(true).ToArray();
             var deletedProduct = products.FirstOrDefault(prod => prod.Id == id);
             if (deletedProduct is null)

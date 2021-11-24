@@ -25,8 +25,8 @@ namespace Business.Services
 
         public ProductOutputDTO EditProductRating(string userId, int productId, int rating)
         {
-            var products = _productRepo.FindAll(true);
-            var product = products.FirstOrDefault(prod => prod.Id == productId);
+            var product = _productRepo.FindAll(true)
+                .FirstOrDefault(prod => prod.Id == productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
@@ -54,8 +54,8 @@ namespace Business.Services
 
         public void DeleteRating(string userId, int productId)
         {
-            var products = _productRepo.FindAll(true);
-            var product = products.FirstOrDefault(prod => prod.Id == productId);
+            var product = _productRepo.FindAll(true)
+                .FirstOrDefault(prod => prod.Id == productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);

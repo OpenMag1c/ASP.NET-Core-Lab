@@ -27,6 +27,7 @@ namespace Business.Services
             _jwtGenerator = jwtGenerator;
             _emailService = emailService;
         }
+
         public async Task<string> SignInAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = await _userManager.FindByEmailAsync(userCredentialsDto.Email);

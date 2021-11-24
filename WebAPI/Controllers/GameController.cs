@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Business.DTO;
 using Business.Helper;
@@ -45,7 +46,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("search")]
         [AllowAnonymous]
-        public IEnumerable<ProductOutputDTO> SearchProducts(string term, int limit, int offset)
+        public IEnumerable<ProductOutputDTO> SearchProducts([Required]string term, [Required] int limit, [Required] int offset)
         {
             var result = _gamesService.SearchProductsByTerm(term, limit, offset);
 
@@ -60,7 +61,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("id")]
         [AllowAnonymous]
-        public ActionResult<ProductOutputDTO> FindProductById(int id)
+        public ActionResult<ProductOutputDTO> FindProductById([Required][Range(0,100)] int id)
         {
             var result = _gamesService.FindProductById(id);
 
@@ -125,7 +126,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPost("rating")]
         [Authorize]
-        public async Task<ActionResult<ProductOutputDTO>> EditRating([FromForm] int productId, [FromForm] int rating)
+        public ActionResult<ProductOutputDTO> EditRating([FromForm] int productId, [FromForm] int rating)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
             var productOutputDto = _ratingService.EditProductRating(userId, productId, rating);
@@ -143,7 +144,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpDelete("rating")]
         [Authorize]
-        public async Task<IActionResult> DeleteRating(int productId)
+        public IActionResult DeleteRating(int productId)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
             _ratingService.DeleteRating(userId, productId);
@@ -158,7 +159,6 @@ namespace WebAPI.Controllers
         /// <response code="400">Wrong params format</response>
         /// <response code="500">Oops!</response>
         [HttpGet("list")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
         [AllowAnonymous]
         public IEnumerable<ProductOutputDTO> GetProducts([FromQuery] Pagination pagination, [FromQuery]ProductFilters productFilters)
         {

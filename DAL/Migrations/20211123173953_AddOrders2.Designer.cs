@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211120154506_UpdateEnums")]
-    partial class UpdateEnums
+    [Migration("20211123173953_AddOrders2")]
+    partial class AddOrders2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,7 +77,7 @@ namespace DAL.Migrations
                             Platform = 1,
                             Price = 24.989999999999998,
                             Rating = 16,
-                            TotalRating = 78
+                            TotalRating = 0
                         },
                         new
                         {
@@ -91,7 +91,7 @@ namespace DAL.Migrations
                             Platform = 0,
                             Price = 4.9900000000000002,
                             Rating = 18,
-                            TotalRating = 85
+                            TotalRating = 0
                         },
                         new
                         {
@@ -105,7 +105,7 @@ namespace DAL.Migrations
                             Platform = 2,
                             Price = 0.98999999999999999,
                             Rating = 7,
-                            TotalRating = 100
+                            TotalRating = 0
                         },
                         new
                         {
@@ -119,7 +119,7 @@ namespace DAL.Migrations
                             Platform = 4,
                             Price = 29.989999999999998,
                             Rating = 18,
-                            TotalRating = 70
+                            TotalRating = 0
                         },
                         new
                         {
@@ -133,7 +133,7 @@ namespace DAL.Migrations
                             Platform = 0,
                             Price = 19.989999999999998,
                             Rating = 16,
-                            TotalRating = 89
+                            TotalRating = 0
                         },
                         new
                         {
@@ -147,7 +147,7 @@ namespace DAL.Migrations
                             Platform = 2,
                             Price = 0.98999999999999999,
                             Rating = 7,
-                            TotalRating = 80
+                            TotalRating = 0
                         },
                         new
                         {
@@ -161,7 +161,7 @@ namespace DAL.Migrations
                             Platform = 4,
                             Price = 5.9900000000000002,
                             Rating = 3,
-                            TotalRating = 87
+                            TotalRating = 0
                         },
                         new
                         {
@@ -175,7 +175,7 @@ namespace DAL.Migrations
                             Platform = 0,
                             Price = 2.9900000000000002,
                             Rating = 12,
-                            TotalRating = 93
+                            TotalRating = 0
                         },
                         new
                         {
@@ -189,7 +189,7 @@ namespace DAL.Migrations
                             Platform = 0,
                             Price = 5.9900000000000002,
                             Rating = 7,
-                            TotalRating = 90
+                            TotalRating = 0
                         },
                         new
                         {
@@ -203,7 +203,7 @@ namespace DAL.Migrations
                             Platform = 3,
                             Price = 0.0,
                             Rating = 18,
-                            TotalRating = 100
+                            TotalRating = 0
                         },
                         new
                         {
@@ -217,7 +217,7 @@ namespace DAL.Migrations
                             Platform = 3,
                             Price = 4.9900000000000002,
                             Rating = 16,
-                            TotalRating = 99
+                            TotalRating = 0
                         });
                 });
 

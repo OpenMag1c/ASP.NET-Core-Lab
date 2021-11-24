@@ -5,8 +5,8 @@ namespace Business.Models
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Sorting
     {
-        Asc = 1,
-        Desc = 2,
+        Asc,
+        Desc,
 
         Nothing = 0
     }

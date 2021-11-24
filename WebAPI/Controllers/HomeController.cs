@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("GetInfo")]
         [Authorize(Roles = Roles.Admin)]
-        public string GetInfo()
+        public ActionResult<string> GetInfo()
         {
             var str = new StringBuilder();
             foreach (var login in _userService.GetUserLogins())
@@ -33,7 +33,6 @@ namespace WebAPI.Controllers
                 str.Append(login);
                 str.Append("\n");
             }
-            _logger.ForContext<HomeController>().Information("request: GetInfo");
 
             return str.ToString();
         }

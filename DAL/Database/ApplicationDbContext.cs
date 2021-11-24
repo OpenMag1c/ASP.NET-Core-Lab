@@ -9,6 +9,7 @@ namespace DAL.Database
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public ApplicationDbContext(DbContextOptions options)
             : base(options)

@@ -32,8 +32,11 @@ namespace DAL.Repositories
                     .Where(expression);
 
         public void Create(T entity) => DbContext.Set<T>().Add(entity);
+
         public void Update(T entity) => DbContext.Set<T>().Update(entity);
+
         public void Delete(T entity) => DbContext.Set<T>().Remove(entity);
+
         public void Save() => DbContext.SaveChanges();
     }
 }

@@ -5,9 +5,7 @@ using AutoMapper;
 using Business.DTO;
 using Business.ExceptionMiddleware;
 using Business.Interfaces;
-using DAL.Interfaces;
 using DAL.Models;
-using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services
@@ -37,11 +35,6 @@ namespace Business.Services
         public async Task<UserDTO> UpdateUserAsync(string userId, UserDTO userDto)
         {
             var oldUser = await _userManager.FindByIdAsync(userId);
-            if (oldUser is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
-            }
-
             var newUser = _mapper.Map(userDto, oldUser);
             var result = await _userManager.UpdateAsync(newUser);
             if (!result.Succeeded)

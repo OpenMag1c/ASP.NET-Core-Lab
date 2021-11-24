@@ -2,7 +2,7 @@
 
 namespace DAL.Migrations
 {
-    public partial class AddDekete : Migration
+    public partial class AddOrders2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
