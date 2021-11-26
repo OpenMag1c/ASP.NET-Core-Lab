@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Serilog;
 using Business.Interfaces;
 using DAL.Enum;
@@ -25,10 +27,11 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("GetInfo")]
         [Authorize(Roles = Roles.Admin)]
-        public ActionResult<string> GetInfo()
+        public async Task<ActionResult<string>> GetInfo()
         {
             var str = new StringBuilder();
-            foreach (var login in _userService.GetUserLogins())
+            var logins = await _userService.GetUserLoginsAsync();
+            foreach (var login in logins)
             {
                 str.Append(login);
                 str.Append("\n");

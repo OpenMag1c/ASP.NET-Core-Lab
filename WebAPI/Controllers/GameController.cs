@@ -31,9 +31,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("top-platforms")]
         [AllowAnonymous]
-        public IEnumerable<PlatformDTO> GetTopPlatforms()
-        {
-            var result = _gamesService.GetTopThreePlatforms();
+        public async Task<IEnumerable<PlatformDTO>> GetTopPlatforms()
+        { 
+            var result = await _gamesService.GetTopThreePlatformsAsync();
 
             return result;
         }
@@ -46,9 +46,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("search")]
         [AllowAnonymous]
-        public IEnumerable<ProductOutputDTO> SearchProducts([Required]string term, [Required] int limit, [Required] int offset)
+        public async Task<IEnumerable<ProductOutputDTO>> SearchProducts([Required]string term, [Required] int limit, [Required] int offset)
         {
-            var result = _gamesService.SearchProductsByTerm(term, limit, offset);
+            var result = await _gamesService.SearchProductsByTermAsync(term, limit, offset);
 
             return result;
         }
@@ -61,9 +61,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("id")]
         [AllowAnonymous]
-        public ActionResult<ProductOutputDTO> FindProductById([Required][Range(0,100)] int id)
+        public async Task<ActionResult<ProductOutputDTO>> FindProductById([Required][Range(0,100)] int id)
         {
-            var result = _gamesService.FindProductById(id);
+            var result = await _gamesService.FindProductByIdAsync(id);
 
             return result;
         }
@@ -111,9 +111,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpDelete]
         [Authorize(Roles = Roles.Admin)]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            _gamesService.DeleteProduct(id);
+            await _gamesService.DeleteProductAsync(id);
 
             return NoContent();
         }
@@ -126,10 +126,10 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPost("rating")]
         [Authorize]
-        public ActionResult<ProductOutputDTO> EditRating([FromForm] int productId, [FromForm] int rating)
+        public async Task<ActionResult<ProductOutputDTO>> EditRating([FromForm] int productId, [FromForm] int rating)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            var productOutputDto = _ratingService.EditProductRating(userId, productId, rating);
+            var productOutputDto = await _ratingService.EditProductRatingAsync(userId, productId, rating);
 
             return productOutputDto;
         }
@@ -144,10 +144,10 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpDelete("rating")]
         [Authorize]
-        public IActionResult DeleteRating(int productId)
+        public async Task<IActionResult> DeleteRating(int productId)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            _ratingService.DeleteRating(userId, productId);
+            await _ratingService.DeleteRatingAsync(userId, productId);
 
             return NoContent();
         }
@@ -160,9 +160,9 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpGet("list")]
         [AllowAnonymous]
-        public IEnumerable<ProductOutputDTO> GetProducts([FromQuery] Pagination pagination, [FromQuery]ProductFilters productFilters)
+        public async Task<IEnumerable<ProductOutputDTO>> GetProducts([FromQuery] Pagination pagination, [FromQuery]ProductFilters productFilters)
         {
-            var products = _gamesService.GetProducts(pagination, productFilters);
+            var products = await _gamesService.GetProductsAsync(pagination, productFilters);
 
             return products;
         }

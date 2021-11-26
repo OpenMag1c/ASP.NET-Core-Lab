@@ -26,9 +26,9 @@ namespace Business.Services
 
         public async Task<OrderOutputDTO> AddProductToOrderAsync(string userId, int productId, int amount)
         {
-            var currentOrder = _orderRepo.FindAll(true)
+            var currentOrder = await _orderRepo.FindAll(true)
                 .Include(order => order.OrderItems)
-                .FirstOrDefault(order => order.UserId == int.Parse(userId) && !order.IsPaid);
+                .FirstOrDefaultAsync(order => order.UserId == int.Parse(userId) && !order.IsPaid);
             var orderItem = new OrderItem() {ProductId = productId, Amount = amount};
             var orderOutputDto = CreateOrUpdateOrder(currentOrder, orderItem, userId);
 
@@ -39,7 +39,7 @@ namespace Business.Services
         {
             var orders = _orderRepo.FindAll(false)
                 .Include(order => order.OrderItems);
-            var order = orders.FirstOrDefault(o => o.UserId == int.Parse(userId) && !o.IsPaid);
+            var order = await orders.FirstOrDefaultAsync(o => o.UserId == int.Parse(userId) && !o.IsPaid);
             var orderDto = _mapper.Map<OrderOutputDTO>(order);
 
             return orderDto;
@@ -49,7 +49,7 @@ namespace Business.Services
         {
             var orders = _orderRepo.FindAll(false)
                 .Include(order => order.OrderItems);
-            var order = orders.FirstOrDefault(o => o.Id == orderId);
+            var order = await orders.FirstOrDefaultAsync(o => o.Id == orderId);
             var orderDto = _mapper.Map<OrderOutputDTO>(order);
 
             return orderDto;
@@ -57,7 +57,7 @@ namespace Business.Services
 
         public async Task<OrderOutputDTO> UpdateProductsOfOrderAsync(string userId, OrderItemDTO orderItemDto)
         {
-            var order = GetUserOrder(userId);
+            var order = await GetUserOrderAsync(userId);
 
             var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == orderItemDto.ProductId);
@@ -75,7 +75,7 @@ namespace Business.Services
 
         public async Task DeleteProductsFromOrderAsync(string userId, int productId)
         {
-            var order = GetUserOrder(userId);
+            var order = await GetUserOrderAsync(userId);
 
             var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == productId);
@@ -97,17 +97,17 @@ namespace Business.Services
 
         public async Task BuyProductsAsync(string userId)
         {
-            var order = GetUserOrder(userId);
+            var order = await GetUserOrderAsync(userId);
             order.IsPaid = true;
             _orderRepo.Update(order);
             _orderRepo.Save();
         }
 
-        private Order GetUserOrder(string userId)
+        private async Task<Order> GetUserOrderAsync(string userId)
         {
-            var order = _orderRepo.FindAll(true)
+            var order = await _orderRepo.FindAll(true)
                 .Include(order => order.OrderItems)
-                .FirstOrDefault(order => order.UserId == int.Parse(userId) && !order.IsPaid);
+                .FirstOrDefaultAsync(order => order.UserId == int.Parse(userId) && !order.IsPaid);
             if (order is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, "Product is paid");

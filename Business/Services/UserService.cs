@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +8,7 @@ using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -21,13 +23,9 @@ namespace Business.Services
             _userManager = userManager;
         }
 
-        public List<string> GetUserLogins()
+        public async Task<List<string>> GetUserLoginsAsync()
         {
-            var result = new List<string>();
-            foreach (var user in _userManager.Users)
-            {
-                result.Add(user.UserName);
-            }
+            var result = await _userManager.Users.Select(user => user.UserName).ToListAsync();
 
             return result;
         }

@@ -13,6 +13,7 @@ using CloudinaryDotNet.Actions;
 using DAL.Enum;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
@@ -29,11 +30,11 @@ namespace Business.Services
             _cloudinary = cloudinary;
         }
 
-        public IEnumerable<ProductOutputDTO> GetProducts(Pagination pagination, ProductFilters filters)
+        public async Task<IEnumerable<ProductOutputDTO>> GetProductsAsync(Pagination pagination, ProductFilters filters)
         {
             var products = _productRepo.FindAll(false);
             products = FilterProducts(products, filters);
-            var pagedList = PagedProducts<Product>.ToPagedList(products, pagination.PageNumber, pagination.PageSize);
+            var pagedList = await PagedProducts<Product>.ToPagedListAsync(products, pagination.PageNumber, pagination.PageSize);
             var result = pagedList.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
             return result;
         }
@@ -69,9 +70,9 @@ namespace Business.Services
             return products;
         }
 
-        public IEnumerable<PlatformDTO> GetTopThreePlatforms()
+        public async Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync()
         {
-            var products = _productRepo.FindAll(false).ToArray();
+            var products = await _productRepo.FindAll(false).ToArrayAsync();
             var sortedProducts =
                 products.GroupBy(product => product.Platform)
                     .OrderByDescending(productGroupingItem => productGroupingItem.Count())
@@ -85,9 +86,9 @@ namespace Business.Services
             return sortedProducts;
         }
 
-        public IEnumerable<ProductOutputDTO> SearchProductsByTerm(string term, int limit, int offset)
+        public async Task<IEnumerable<ProductOutputDTO>> SearchProductsByTermAsync(string term, int limit, int offset)
         {
-            var products = _productRepo.FindAll(false).ToArray();
+            var products = await _productRepo.FindAll(false).ToArrayAsync();
             term = term.ToLower();
             var neededProducts = 
                 products.Where(prod => prod.Name.ToLower().Contains(term))
@@ -103,9 +104,9 @@ namespace Business.Services
             return neededProducts;
         }
 
-        public ProductOutputDTO FindProductById(int id)
+        public async Task<ProductOutputDTO> FindProductByIdAsync(int id)
         {
-            var products = _productRepo.FindAll(false).ToArray();
+            var products = await _productRepo.FindAll(false).ToArrayAsync();
             var product = products.FirstOrDefault(prod => prod.Id == id);
             if (product is null)
             {
@@ -135,7 +136,7 @@ namespace Business.Services
 
         public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
         {
-            var products = _productRepo.FindAll(true).ToArray();
+            var products = await _productRepo.FindAll(true).ToArrayAsync();
             var currentProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
             if (currentProduct is null)
             {
@@ -151,9 +152,9 @@ namespace Business.Services
             return resultDto;
         }
 
-        public void DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            var products = _productRepo.FindAll(true).ToArray();
+            var products = await _productRepo.FindAll(true).ToArrayAsync();
             var product = products.FirstOrDefault(prod => prod.Id == id);
             if (product is null)
             {

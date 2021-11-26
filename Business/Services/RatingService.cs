@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.ExceptionMiddleware;
@@ -23,17 +24,17 @@ namespace Business.Services
             _mapper = mapper;
         }
 
-        public ProductOutputDTO EditProductRating(string userId, int productId, int rating)
+        public async Task<ProductOutputDTO> EditProductRatingAsync(string userId, int productId, int rating)
         {
-            var product = _productRepo.FindAll(true)
-                .FirstOrDefault(prod => prod.Id == productId);
+            var product = await _productRepo.FindAll(true)
+                .FirstOrDefaultAsync(prod => prod.Id == productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
             var ratings = _ratingRepo.FindAll(true);
-            var productRating = ratings.FirstOrDefault(rate => rate.UserId == int.Parse(userId) && rate.ProductId == productId);
+            var productRating = await ratings.FirstOrDefaultAsync(rate => rate.UserId == int.Parse(userId) && rate.ProductId == productId);
             if (productRating is not null)
             {
                 productRating.Rating = rating;
@@ -52,17 +53,17 @@ namespace Business.Services
             return productOutputDto;
         }
 
-        public void DeleteRating(string userId, int productId)
+        public async Task DeleteRatingAsync(string userId, int productId)
         {
-            var product = _productRepo.FindAll(true)
-                .FirstOrDefault(prod => prod.Id == productId);
+            var product = await _productRepo.FindAll(true)
+                .FirstOrDefaultAsync(prod => prod.Id == productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
             var ratings = _ratingRepo.FindAll(true).Include(rate => rate.Product);
-            var productRating = ratings.FirstOrDefault(rating => rating.UserId == int.Parse(userId) && rating.ProductId == productId);
+            var productRating = await ratings.FirstOrDefaultAsync(rating => rating.UserId == int.Parse(userId) && rating.ProductId == productId);
             if (productRating is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.NotCompleted);
