@@ -45,8 +45,16 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> GetProductsOfOrder(int orderId = 0)
         {
-            var userId = UserHelpers.GetUserIdByClaim(User.Claims);
-            var order = await _ordersService.GetProductsOfOrderAsync(userId, orderId);
+            OrderOutputDTO order;
+            if (orderId == 0)
+            {
+                var userId = UserHelpers.GetUserIdByClaim(User.Claims);
+                order = await _ordersService.GetProductsOfOrderAsync(userId);
+            }
+            else
+            {
+                order = await _ordersService.GetProductsOfOrderAsync(orderId);
+            }
 
             return order;
         }

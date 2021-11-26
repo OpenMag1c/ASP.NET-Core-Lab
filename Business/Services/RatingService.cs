@@ -75,8 +75,8 @@ namespace Business.Services
 
         public void RecalculateTotalRating(Product product)
         {
-            var newRatings = _ratingRepo.FindAll(false);
-            var totalRating = (int)newRatings.Where(rate => rate.ProductId == product.Id)
+            var ratings = _ratingRepo.FindAll(false);
+            var totalRating = (int)ratings.Where(rate => rate.ProductId == product.Id)
                 .Average(rate => rate.Rating);
             product.TotalRating = totalRating;
             _productRepo.Save();

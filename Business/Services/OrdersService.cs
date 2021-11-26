@@ -16,60 +16,40 @@ namespace Business.Services
     public class OrdersService : IOrdersService
     {
         private readonly IRepositoryBase<Order> _orderRepo;
-        private readonly IRepositoryBase<Product> _productRepo;
         private readonly IMapper _mapper;
 
-        public OrdersService(IRepositoryBase<Order> orderRepo, IRepositoryBase<Product> productRepo, IMapper mapper)
+        public OrdersService(IRepositoryBase<Order> orderRepo, IMapper mapper)
         {
             _orderRepo = orderRepo;
-            _productRepo = productRepo;
             _mapper = mapper;
         }
 
         public async Task<OrderOutputDTO> AddProductToOrderAsync(string userId, int productId, int amount)
         {
-            var oldOrder = _orderRepo.FindAll(true)
+            var currentOrder = _orderRepo.FindAll(true)
                 .Include(order => order.OrderItems)
                 .FirstOrDefault(order => order.UserId == int.Parse(userId) && !order.IsPaid);
             var orderItem = new OrderItem() {ProductId = productId, Amount = amount};
-            OrderOutputDTO orderDto;
-            if (oldOrder is not null)
-            {
-                oldOrder.OrderItems.Add(orderItem);
-                orderDto = _mapper.Map<OrderOutputDTO>(oldOrder);
-            }
-            else
-            {
-                var order = new Order()
-                {
-                    CreationDate = DateTime.Now,
-                    UserId = int.Parse(userId),
-                    OrderItems = new List<OrderItem>() {orderItem}
-                };
+            var orderOutputDto = CreateOrUpdateOrder(currentOrder, orderItem, userId);
 
-                _orderRepo.Create(order);
-                orderDto = _mapper.Map<OrderOutputDTO>(order);
-            }
+            return orderOutputDto;
+        }
 
-            _orderRepo.Save();
+        public async Task<OrderOutputDTO> GetProductsOfOrderAsync(string userId)
+        {
+            var orders = _orderRepo.FindAll(false)
+                .Include(order => order.OrderItems);
+            var order = orders.FirstOrDefault(o => o.UserId == int.Parse(userId) && !o.IsPaid);
+            var orderDto = _mapper.Map<OrderOutputDTO>(order);
 
             return orderDto;
         }
 
-        public async Task<OrderOutputDTO> GetProductsOfOrderAsync(string userId, int orderId)
+        public async Task<OrderOutputDTO> GetProductsOfOrderAsync(int orderId)
         {
             var orders = _orderRepo.FindAll(false)
                 .Include(order => order.OrderItems);
-            Order order;
-            if (orderId == 0)
-            {
-                order = orders.FirstOrDefault(o => o.UserId == int.Parse(userId) && !o.IsPaid);
-            }
-            else
-            {
-                order = orders.FirstOrDefault(o => o.Id == orderId);
-            }
-
+            var order = orders.FirstOrDefault(o => o.Id == orderId);
             var orderDto = _mapper.Map<OrderOutputDTO>(order);
 
             return orderDto;
@@ -79,11 +59,11 @@ namespace Business.Services
         {
             var order = GetUserOrder(userId);
 
-            var oldOrderItem = order.OrderItems
+            var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == orderItemDto.ProductId);
-            if (oldOrderItem is not null)
+            if (currentOrderItem is not null)
             {
-                oldOrderItem.Amount = orderItemDto.Amount;
+                currentOrderItem.Amount = orderItemDto.Amount;
                 _orderRepo.Update(order);
                 _orderRepo.Save();
             }
@@ -97,11 +77,11 @@ namespace Business.Services
         {
             var order = GetUserOrder(userId);
 
-            var oldOrderItem = order.OrderItems
+            var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == productId);
-            if (oldOrderItem is not null)
+            if (currentOrderItem is not null)
             {
-                order.OrderItems.Remove(oldOrderItem);
+                order.OrderItems.Remove(currentOrderItem);
                 if (order.OrderItems.Count != 0)
                 {
                     _orderRepo.Update(order);
@@ -118,20 +98,9 @@ namespace Business.Services
         public async Task BuyProductsAsync(string userId)
         {
             var order = GetUserOrder(userId);
-
-            var products = _productRepo.FindAll(true).ToList();
-            foreach (var orderItem in order.OrderItems)
-            {
-                var product = products.FirstOrDefault(product => product.Id == orderItem.ProductId);
-                if (product is not null && product.Count - orderItem.Amount >= 0)
-                {
-                    product.Count -= orderItem.Amount;
-                }
-            }
-
             order.IsPaid = true;
             _orderRepo.Update(order);
-            _productRepo.Save();
+            _orderRepo.Save();
         }
 
         private Order GetUserOrder(string userId)
@@ -145,6 +114,32 @@ namespace Business.Services
             }
 
             return order;
+        }
+
+        private OrderOutputDTO CreateOrUpdateOrder(Order currentOrder, OrderItem orderItem, string userId)
+        {
+            OrderOutputDTO orderDto;
+            if (currentOrder is not null)
+            {
+                currentOrder.OrderItems.Add(orderItem);
+                orderDto = _mapper.Map<OrderOutputDTO>(currentOrder);
+            }
+            else
+            {
+                var order = new Order()
+                {
+                    CreationDate = DateTime.Now,
+                    UserId = int.Parse(userId),
+                    OrderItems = new List<OrderItem>() { orderItem }
+                };
+
+                _orderRepo.Create(order);
+                orderDto = _mapper.Map<OrderOutputDTO>(order);
+            }
+
+            _orderRepo.Save();
+
+            return orderDto;
         }
     }
 }

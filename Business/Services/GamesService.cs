@@ -106,29 +106,29 @@ namespace Business.Services
         public ProductOutputDTO FindProductById(int id)
         {
             var products = _productRepo.FindAll(false).ToArray();
-            var neededProduct = products.FirstOrDefault(prod => prod.Id == id);
-            if (neededProduct is null)
+            var product = products.FirstOrDefault(prod => prod.Id == id);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var productOutputDto = _mapper.Map<ProductOutputDTO>(neededProduct);
+            var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
 
             return productOutputDto;
         }
 
         public async Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto)
         {
-            var newProduct = _mapper.Map<Product>(productInputDto);
-            _productRepo.Create(newProduct);
-            await UploadProductImagesAsync(productInputDto, newProduct);
-            if (newProduct is null)
+            var product = _mapper.Map<Product>(productInputDto);
+            _productRepo.Create(product);
+            await UploadProductImagesAsync(productInputDto, product);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
             }
 
             _productRepo.Save();
-            var resultDto = _mapper.Map<ProductOutputDTO>(newProduct);
+            var resultDto = _mapper.Map<ProductOutputDTO>(product);
 
             return resultDto;
         }
@@ -136,17 +136,17 @@ namespace Business.Services
         public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
         {
             var products = _productRepo.FindAll(true).ToArray();
-            var oldProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
-            if (oldProduct is null)
+            var currentProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
+            if (currentProduct is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var newProduct = _mapper.Map(productInputDto, oldProduct);
-            await UploadProductImagesAsync(productInputDto, newProduct);
-            _productRepo.Update(newProduct);
+            var product = _mapper.Map(productInputDto, currentProduct);
+            await UploadProductImagesAsync(productInputDto, product);
+            _productRepo.Update(product);
             _productRepo.Save();
-            var resultDto = _mapper.Map<ProductOutputDTO>(newProduct);
+            var resultDto = _mapper.Map<ProductOutputDTO>(product);
 
             return resultDto;
         }
@@ -154,13 +154,13 @@ namespace Business.Services
         public void DeleteProduct(int id)
         {
             var products = _productRepo.FindAll(true).ToArray();
-            var deletedProduct = products.FirstOrDefault(prod => prod.Id == id);
-            if (deletedProduct is null)
+            var product = products.FirstOrDefault(prod => prod.Id == id);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            _productRepo.Delete(deletedProduct);
+            _productRepo.Delete(product);
             _productRepo.Save();
         }
 
