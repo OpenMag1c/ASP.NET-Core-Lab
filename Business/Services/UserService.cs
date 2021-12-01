@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Business.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Business.Services
 {
@@ -16,11 +18,13 @@ namespace Business.Services
     {
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly IMemoryCache _cache;
 
-        public UserService(IMapper mapper, UserManager<User> userManager)
+        public UserService(IMapper mapper, UserManager<User> userManager, IMemoryCache memoryCache)
         {
             _mapper = mapper;
             _userManager = userManager;
+            _cache = memoryCache;
         }
 
         public async Task<List<string>> GetUserLoginsAsync()
@@ -40,7 +44,10 @@ namespace Business.Services
                 throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
             }
 
-            return _mapper.Map<UserDTO>(newUser);
+            _cache.Remove(userId);
+            var newUserDto = _mapper.Map<UserDTO>(newUser);
+
+            return newUserDto;
         }
 
         public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
@@ -53,18 +60,30 @@ namespace Business.Services
             }
 
             await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            _cache.Remove(userId);
 
             return true;
         }
+
         public async Task<UserDTO> GetProfileInfoAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
+            if (!_cache.TryGetValue(userId, out User user))
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
+                user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
+                {
+                    _cache.Set(user.Id, user,
+                        new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+                else
+                {
+                    throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
+                }
             }
 
-            return _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<UserDTO>(user);
+
+            return userDto;
         }
     }
 }

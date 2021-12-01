@@ -31,6 +31,8 @@ namespace WebAPI
 
             services.AddHealthCheck(Configuration.GetConnectionString("DefaultConnection"));
 
+            services.AddMemoryCache();
+
             services.AddRazorPages();
 
             services.AddServicesCollection();
@@ -43,11 +45,10 @@ namespace WebAPI
         {
             app.UseExceptionHandler("/error");
 
-            if (env.IsDevelopment())
-            {
-                //app.UseDeveloperExceptionPage();
-                app.UseSwaggerDocumentation();
-            }
+            //app.UseDeveloperExceptionPage();
+            Log.Information(env.EnvironmentName);
+
+            app.UseSwaggerDocumentation();
 
             app.UseHttpsRedirection();
 

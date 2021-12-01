@@ -46,7 +46,7 @@
             <response code="400">Wrong params format</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.FindProductByIdAsync(System.Int32)">
+        <member name="M:WebAPI.Controllers.GamesController.FindProductById(System.Int32)">
             <summary>
             Find product by Id
             </summary>
@@ -72,7 +72,7 @@
             <response code="403">No access</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.DeleteProductAsync(System.Int32)">
+        <member name="M:WebAPI.Controllers.GamesController.DeleteProduct(System.Int32)">
             <summary>
             Delete product, only for admin
             </summary>
@@ -90,7 +90,7 @@
             <response code="400">Wrong params format</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.DeleteRatingAsync(System.Int32)">
+        <member name="M:WebAPI.Controllers.GamesController.DeleteRating(System.Int32)">
             <summary>
             Delete product rating, you must be authenticated 
             </summary>
@@ -100,7 +100,7 @@
             <response code="403">No access</response>
             <response code="500">Oops!</response>
         </member>
-        <member name="M:WebAPI.Controllers.GamesController.GetProductsAsync(Business.Models.Pagination,Business.Models.ProductFilters)">
+        <member name="M:WebAPI.Controllers.GamesController.GetProducts(Business.Models.Pagination,Business.Models.ProductFilters)">
             <summary>
             Get products with sorting and filtering
             </summary>

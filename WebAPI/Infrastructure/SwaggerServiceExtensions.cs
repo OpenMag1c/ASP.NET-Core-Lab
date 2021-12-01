@@ -55,7 +55,11 @@ namespace WebAPI.Infrastructure
         public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI");
+                c.RoutePrefix = "swagger";
+            });
 
             return app;
         }

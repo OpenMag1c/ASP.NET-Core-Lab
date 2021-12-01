@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace WebAPI.Infrastructure
 {
@@ -17,7 +18,7 @@ namespace WebAPI.Infrastructure
                 .AddJsonFile("appsettings.json");
             var config = builder.Build();
             string connectionString = config.GetConnectionString("DefaultConnection");
-
+            Log.Information(connectionString);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddIdentity<User, IdentityRole<int>>(options =>

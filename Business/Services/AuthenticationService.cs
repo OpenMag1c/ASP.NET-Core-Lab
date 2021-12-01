@@ -20,7 +20,7 @@ namespace Business.Services
         private readonly IJwtGenerator _jwtGenerator;
         private readonly EmailService _emailService;
 
-        public AuthenticationService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator, EmailService emailService)
+        public AuthenticationService(IMapper mapper, UserManager<User> userManager, IJwtGenerator jwtGenerator, EmailService emailService)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -43,7 +43,9 @@ namespace Business.Services
                 throw new HttpStatusException(HttpStatusCode.Unauthorized, Messages.WrongPasswordOrEmail);
             }
 
-            return await _jwtGenerator.GenerateJwtTokenAsync(user);
+            var token = await _jwtGenerator.GenerateJwtTokenAsync(user);
+
+            return token;
         }
 
         public async Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto)
@@ -63,6 +65,7 @@ namespace Business.Services
                 var tokenEncoded = WebEncoders.Base64UrlEncode(tokenBytes);
                 await _emailService.SendEmailAsync(user.Email, "Confirm your account",
                     $"https://localhost:44328/api/Auth/email-confirmation?id={user.Id}&token={tokenEncoded}"); 
+
                 return true;
             }
 
@@ -81,6 +84,7 @@ namespace Business.Services
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, tokenDecodedString);
+
             return result.Succeeded;
         }
     }

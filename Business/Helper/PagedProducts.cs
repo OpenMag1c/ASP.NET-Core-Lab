@@ -7,11 +7,10 @@ namespace Business.Helper
 {
     public static class PagedProducts<T> where T : class
     {
-        public static async Task<List<T>> ToPagedListAsync(IQueryable<T> source, int pageNumber, int pageSize)
+        public static IEnumerable<T> ToPagedEnumerable(IEnumerable<T> source, int pageNumber, int pageSize)
         {
-            var items = await source.Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var items = source.Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
             return items;
         }
     }
