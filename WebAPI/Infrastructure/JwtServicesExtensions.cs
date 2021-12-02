@@ -40,11 +40,5 @@ namespace WebAPI.Infrastructure
 
             return services;
         }
-
-        public static IApplicationBuilder UseJwtToken(this IApplicationBuilder app)
-        {
-
-            return app;
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Business.Interfaces;
+﻿using Business.Helper;
+using Business.Interfaces;
 using Business.Services;
 using DAL.Database;
 using DAL.Interfaces;
@@ -18,9 +19,13 @@ namespace WebAPI.Infrastructure
             services.AddSingleton(Log.Logger);
             services.AddScoped<EmailService>();
             services.AddScoped<ImagesUrls>();
+
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddScoped(typeof(ICachingData<User>), typeof(CachingData<User>));
+
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGamesService, GamesService>();
