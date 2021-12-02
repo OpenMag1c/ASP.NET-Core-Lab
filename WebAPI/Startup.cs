@@ -35,6 +35,8 @@ namespace WebAPI
 
             services.AddRazorPages();
 
+            services.AddResponseCachingService();
+
             services.AddServicesCollection();
 
             services.AddSwaggerDocumentation();
@@ -45,7 +47,6 @@ namespace WebAPI
         {
             app.UseExceptionHandler("/error");
 
-            //app.UseDeveloperExceptionPage();
             Log.Information(env.EnvironmentName);
 
             app.UseSwaggerDocumentation();
@@ -53,6 +54,8 @@ namespace WebAPI
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.UseResponseCompression();
 
             app.UseRouting();
             
