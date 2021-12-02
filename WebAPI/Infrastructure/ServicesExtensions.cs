@@ -18,10 +18,6 @@ namespace WebAPI.Infrastructure
             services.AddSingleton(Log.Logger);
             services.AddScoped<EmailService>();
             services.AddScoped<ImagesUrls>();
-            //services.AddScoped(typeof(IRepositoryBase<Order>), typeof(OrderRepository));
-            //services.AddScoped(typeof(IRepositoryBase<Product>), typeof(ProductRepository));
-            //services.AddScoped(typeof(IRepositoryBase<ProductRating>), typeof(RepositoryBase<ProductRating>));
-            //services.AddScoped(typeof(RepositoryBase<Order>), typeof(OrderRepository));
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();

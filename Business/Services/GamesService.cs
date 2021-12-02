@@ -35,6 +35,7 @@ namespace Business.Services
             products = FilterProducts(products, filters);
             var pagedProducts = PagedProducts<Product>.ToPagedEnumerable(products, pagination.PageNumber, pagination.PageSize);
             var result = pagedProducts.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            
             return result;
         }
 
@@ -121,11 +122,6 @@ namespace Business.Services
             var product = _mapper.Map<Product>(productInputDto);
             _productRepo.Create(product);
             await UploadProductImagesAsync(productInputDto, product);
-            if (product is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
-            }
-
             await _productRepo.SaveAsync();
             var resultDto = _mapper.Map<ProductOutputDTO>(product);
 
