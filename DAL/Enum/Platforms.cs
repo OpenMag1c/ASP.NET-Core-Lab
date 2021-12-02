@@ -5,12 +5,11 @@ namespace DAL.Enum
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Platforms
     {
+        NoPlatform,
         PersonalComputer,
         Console,
         Mobile,
         Web,
-        VirtualReality,
-
-        NoPlatform = 0
+        VirtualReality
     }
 }

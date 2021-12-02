@@ -5,7 +5,7 @@ namespace Business.Interfaces
 {
     public interface IRatingService
     {
-        public ProductOutputDTO EditProductRating(string userId, int productId, int rating);
-        public void DeleteRating(string userId, int productId);
+        public Task<ProductOutputDTO> EditProductRatingAsync(string userId, int productId, int rating);
+        public Task DeleteRatingAsync(string userId, int productId);
     }
 }

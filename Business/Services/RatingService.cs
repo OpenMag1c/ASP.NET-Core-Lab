@@ -1,39 +1,35 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services
 {
     public class RatingService : IRatingService
     {
-        private readonly IRepositoryBase<Product> _productRepo;
-        private readonly IRepositoryBase<ProductRating> _ratingRepo;
+        private readonly IProductRepository _productRepo;
         private readonly IMapper _mapper;
 
-        public RatingService(IRepositoryBase<Product> productRepo, IRepositoryBase<ProductRating> ratingRepo, IMapper mapper)
+        public RatingService(IProductRepository productRepo, IMapper mapper)
         {
             _productRepo = productRepo;
-            _ratingRepo = ratingRepo;
             _mapper = mapper;
         }
 
-        public ProductOutputDTO EditProductRating(string userId, int productId, int rating)
+        public async Task<ProductOutputDTO> EditProductRatingAsync(string userId, int productId, int rating)
         {
-            var products = _productRepo.FindAll(true);
-            var product = products.FirstOrDefault(prod => prod.Id == productId);
+            var product = await _productRepo.GetProductWithDetailsAsync(productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var ratings = _ratingRepo.FindAll(true);
-            var productRating = ratings.FirstOrDefault(rate => rate.UserId == int.Parse(userId) && rate.ProductId == productId);
+            var productRating = product.Ratings.FirstOrDefault(rate => rate.UserId == int.Parse(userId));
             if (productRating is not null)
             {
                 productRating.Rating = rating;
@@ -41,45 +37,47 @@ namespace Business.Services
             else
             {
                 productRating = new ProductRating
-                    {Product = product, UserId = int.Parse(userId), Rating = rating};
-                _ratingRepo.Create(productRating);
+                {
+                    Product = product, UserId = int.Parse(userId), Rating = rating
+                };
+                product.Ratings.Add(productRating);
             }
 
-            _ratingRepo.Save();
-            RecalculateTotalRating(product);
+            _productRepo.Update(product);
+            await _productRepo.SaveAsync();
+            await RecalculateTotalRating(product);
             var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
 
             return productOutputDto;
         }
 
-        public void DeleteRating(string userId, int productId)
+        public async Task DeleteRatingAsync(string userId, int productId)
         {
-            var products = _productRepo.FindAll(true);
-            var product = products.FirstOrDefault(prod => prod.Id == productId);
+            var product = await _productRepo.GetProductWithDetailsAsync(productId);
             if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var ratings = _ratingRepo.FindAll(true).Include(rate => rate.Product);
-            var productRating = ratings.FirstOrDefault(rating => rating.UserId == int.Parse(userId) && rating.ProductId == productId);
+            var ratings = product.Ratings;
+            var productRating = ratings.FirstOrDefault(rating => rating.UserId == int.Parse(userId));
             if (productRating is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.NotCompleted);
             }
 
-            _ratingRepo.Delete(productRating);
-            _ratingRepo.Save();
-            RecalculateTotalRating(product);
+            ratings.Remove(productRating);
+            await _productRepo.SaveAsync();
+            await RecalculateTotalRating(product);
         }
 
-        public void RecalculateTotalRating(Product product)
+        public async Task RecalculateTotalRating(Product product)
         {
-            var newRatings = _ratingRepo.FindAll(false);
-            var totalRating = (int)newRatings.Where(rate => rate.ProductId == product.Id)
+            var totalRating = (int)product.Ratings
                 .Average(rate => rate.Rating);
             product.TotalRating = totalRating;
-            _productRepo.Save();
+            _productRepo.Update(product);
+            await _productRepo.SaveAsync();
         }
     }
 }

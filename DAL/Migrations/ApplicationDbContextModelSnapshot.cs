@@ -19,6 +19,54 @@ namespace DAL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DAL.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("DAL.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItem");
+                });
+
             modelBuilder.Entity("DAL.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -69,13 +117,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 50,
                             DateCreated = 2018,
-                            Genre = 0,
+                            Genre = 1,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Horizon_Zero_Dawn_mpnuy7.jpg",
                             Name = "Horizon Zero Dawn",
-                            Platform = 1,
+                            Platform = 2,
                             Price = 24.989999999999998,
                             Rating = 16,
-                            TotalRating = 78
+                            TotalRating = 0
                         },
                         new
                         {
@@ -83,13 +131,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 100,
                             DateCreated = 2016,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Counter_Strike_tkkgm4.jpg",
                             Name = "Counter Strike GO",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 4.9900000000000002,
                             Rating = 18,
-                            TotalRating = 85
+                            TotalRating = 0
                         },
                         new
                         {
@@ -97,13 +145,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 500,
                             DateCreated = 2017,
-                            Genre = 4,
+                            Genre = 5,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Brawl_Stars_jwhuv1.jpg",
                             Name = "Brawl Stars",
-                            Platform = 2,
+                            Platform = 3,
                             Price = 0.98999999999999999,
                             Rating = 7,
-                            TotalRating = 100
+                            TotalRating = 0
                         },
                         new
                         {
@@ -111,13 +159,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 25,
                             DateCreated = 2020,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Half_Life_t0lcqj.jpg",
                             Name = "Half-Life VR",
-                            Platform = 4,
+                            Platform = 5,
                             Price = 29.989999999999998,
                             Rating = 18,
-                            TotalRating = 70
+                            TotalRating = 0
                         },
                         new
                         {
@@ -125,13 +173,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 90,
                             DateCreated = 2008,
-                            Genre = 6,
+                            Genre = 7,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Skyrim_b3rdpm.jpg",
                             Name = "TES V Skyrim",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 19.989999999999998,
                             Rating = 16,
-                            TotalRating = 89
+                            TotalRating = 0
                         },
                         new
                         {
@@ -139,13 +187,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 200,
                             DateCreated = 2015,
-                            Genre = 2,
+                            Genre = 3,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Clash_Royale_oipsjp.jpg",
                             Name = "Clash Royale",
-                            Platform = 2,
+                            Platform = 3,
                             Price = 0.98999999999999999,
                             Rating = 7,
-                            TotalRating = 80
+                            TotalRating = 0
                         },
                         new
                         {
@@ -153,13 +201,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 75,
                             DateCreated = 2017,
-                            Genre = 5,
+                            Genre = 6,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Beat_Saber_ubvkuu.jpg",
                             Name = "Beat Saber",
-                            Platform = 4,
+                            Platform = 5,
                             Price = 5.9900000000000002,
                             Rating = 3,
-                            TotalRating = 87
+                            TotalRating = 0
                         },
                         new
                         {
@@ -167,13 +215,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 40,
                             DateCreated = 2011,
-                            Genre = 6,
+                            Genre = 7,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Terraria_uzjoxt.jpg",
                             Name = "Terraria",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 2.9900000000000002,
                             Rating = 12,
-                            TotalRating = 93
+                            TotalRating = 0
                         },
                         new
                         {
@@ -181,13 +229,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 700,
                             DateCreated = 2020,
-                            Genre = 0,
+                            Genre = 1,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Genshin_Impact_x0fd6d.jpg",
                             Name = "Genshin Impact",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 5.9900000000000002,
                             Rating = 7,
-                            TotalRating = 90
+                            TotalRating = 0
                         },
                         new
                         {
@@ -195,13 +243,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 999,
                             DateCreated = 2000,
-                            Genre = 3,
+                            Genre = 4,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Snake_toiezu.jpg",
                             Name = "Snake",
-                            Platform = 3,
+                            Platform = 4,
                             Price = 0.0,
                             Rating = 18,
-                            TotalRating = 100
+                            TotalRating = 0
                         },
                         new
                         {
@@ -209,13 +257,13 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background4.jpg",
                             Count = 120,
                             DateCreated = 2007,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Contra_City_r3iefw.jpg",
                             Name = "Contra city",
-                            Platform = 3,
+                            Platform = 4,
                             Price = 4.9900000000000002,
                             Rating = 16,
-                            TotalRating = 99
+                            TotalRating = 0
                         });
                 });
 
@@ -440,6 +488,36 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("DAL.Models.Order", b =>
+                {
+                    b.HasOne("DAL.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.OrderItem", b =>
+                {
+                    b.HasOne("DAL.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("DAL.Models.ProductRating", b =>
                 {
                     b.HasOne("DAL.Models.Product", "Product")
@@ -508,6 +586,11 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DAL.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("DAL.Models.Product", b =>

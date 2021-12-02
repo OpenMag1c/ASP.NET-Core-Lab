@@ -20,6 +20,7 @@ namespace WebAPI
             ConfigureLogger();
             try
             {
+                Log.Information("_________________");
                 Log.Information("Starting web host");
                 var host = CreateHostBuilder(args).Build();
 

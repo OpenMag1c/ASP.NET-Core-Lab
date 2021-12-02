@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using DAL.Database;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,29 +12,23 @@ namespace DAL.Repositories
     {
         protected ApplicationDbContext DbContext;
 
-        public RepositoryBase(ApplicationDbContext dbContext)
+        public RepositoryBase(ApplicationDbContext repositoryContext)
         {
-            DbContext = dbContext;
+            DbContext = repositoryContext;
         }
 
-        public IQueryable<T> FindAll(bool trackChanges) =>
-            !trackChanges ?
-                DbContext.Set<T>()
-                    .AsNoTracking() :
-                DbContext.Set<T>();
+        public IQueryable<T> FindAll() => DbContext.Set<T>().AsNoTracking();
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression,
-            bool trackChanges) =>
-            !trackChanges ?
-                DbContext.Set<T>()
-                    .Where(expression)
-                    .AsNoTracking() :
-                DbContext.Set<T>()
-                    .Where(expression);
+        public IQueryable<T> FindAllTrackChanges() => DbContext.Set<T>();
 
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) => DbContext.Set<T>().Where(expression).AsNoTracking();
+        
         public void Create(T entity) => DbContext.Set<T>().Add(entity);
+        
         public void Update(T entity) => DbContext.Set<T>().Update(entity);
+        
         public void Delete(T entity) => DbContext.Set<T>().Remove(entity);
-        public void Save() => DbContext.SaveChanges();
+
+        public async Task SaveAsync() => await DbContext.SaveChangesAsync();
     }
 }

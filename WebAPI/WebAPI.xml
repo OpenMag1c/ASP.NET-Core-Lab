@@ -117,6 +117,48 @@
             <response code="403">Access denied</response>
             <response code="500">Oops!</response>
         </member>
+        <member name="M:WebAPI.Controllers.OrdersController.AddProductToOrder(System.Int32,System.Int32)">
+            <summary>
+            Add product to the order, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.OrdersController.GetProductsOfOrder(System.Int32)">
+            <summary>
+            Get products of the order, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="204">Not found</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.OrdersController.UpdateProductsOfOrder(Business.DTO.OrderItemDTO)">
+            <summary>
+            Update products of the order, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="204">Not found</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.OrdersController.DeleteProductsFromOrder(System.Int32)">
+            <summary>
+            Delete product from the order, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
+        <member name="M:WebAPI.Controllers.OrdersController.BuyProducts">
+            <summary>
+            Add product to the order, you must be authenticated 
+            </summary>
+            <response code="201">All OK</response>
+            <response code="400">Wrong params format</response>
+            <response code="500">Oops!</response>
+        </member>
         <member name="M:WebAPI.Controllers.UserController.UpdateProfile(Business.DTO.UserDTO)">
             <summary>
             Update user profile by model

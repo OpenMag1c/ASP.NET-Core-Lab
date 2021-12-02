@@ -7,7 +7,6 @@ namespace Business.Interfaces
     {
         Task<bool> ConfirmEmailAsync(int id, string token);
         Task<string> SignInAsync(UserCredentialsDTO userCredentialsDto);
-
         Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto);
     }
 }

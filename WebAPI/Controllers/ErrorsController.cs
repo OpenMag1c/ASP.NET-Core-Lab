@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using WebAPI.ErrorResponse;
 
 namespace WebAPI.Controllers
 {

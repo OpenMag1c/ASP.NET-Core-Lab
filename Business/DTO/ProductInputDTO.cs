@@ -11,6 +11,7 @@ namespace Business.DTO
         /// </summary> 
         /// <example>"My Best Game"</example>
         [Required]
+        [StringLength(25)]
         public string Name { get; set; }
 
         /// <summary> 
@@ -21,7 +22,8 @@ namespace Business.DTO
         /// Mobile; 
         /// Console; 
         /// </example>
-        public Platforms Platform { get; set; } = Platforms.NoPlatform;
+        [EnumDataType(typeof(Platforms))]
+        public Platforms Platform { get; set; }
 
         /// <summary> 
         /// Product creating data
@@ -29,6 +31,8 @@ namespace Business.DTO
         /// <example> 
         /// 2018
         /// </example>
+        [Required]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Only numbers!")]
         public int DateCreated { get; set; }
 
         /// <summary> 
@@ -37,7 +41,8 @@ namespace Business.DTO
         /// <example> 
         /// RPG/Action
         /// </example>
-        public Genres Genre { get; set; } = Genres.AllGenres;
+        [EnumDataType(typeof(Genres))]
+        public Genres Genre { get; set; }
 
         /// <summary> 
         /// Game rating
@@ -45,7 +50,8 @@ namespace Business.DTO
         /// <example> 
         /// 7
         /// </example>
-        public Ratings Rating { get; set; } = Ratings.AllAges;
+        [EnumDataType(typeof(Ratings))]
+        public Ratings Rating { get; set; }
 
         /// <summary> 
         /// Image-logo
@@ -69,6 +75,7 @@ namespace Business.DTO
         /// <example> 
         /// 4.99
         /// </example>
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Only numbers!")]
         public double Price { get; set; }
 
         /// <summary> 
@@ -77,6 +84,8 @@ namespace Business.DTO
         /// <example> 
         /// 999
         /// </example>
+        [Required]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Only numbers!")]
         public int Count { get; set; }
     }
 }
