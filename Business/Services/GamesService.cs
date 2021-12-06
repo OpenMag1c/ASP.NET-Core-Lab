@@ -72,6 +72,8 @@ namespace Business.Services
 
         public async Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync()
         {
+            throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+
             var products = await _productRepo.GetAllProductsAsync();
             var sortedProducts =
                 products.GroupBy(product => product.Platform)

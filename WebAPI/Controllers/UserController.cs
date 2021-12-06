@@ -5,6 +5,7 @@ using Business.Helper;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace WebAPI.Controllers
 
             return updatedUserDto;
         }
-
+        
         /// <summary>
         /// Update user password
         /// </summary>
@@ -44,7 +45,7 @@ namespace WebAPI.Controllers
         /// <response code="500">Oops!</response>
         [HttpPatch("password")]
         [Authorize]
-        public async Task<IActionResult> ChangeProfilePassword(string oldPassword, string newPassword)
+        public async Task<IActionResult> ChangeProfilePassword([Required] string oldPassword, [Required] string newPassword)
         {
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
             await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
