@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Business.DTO;
+using Business.ExceptionMiddleware;
 using Business.Helper;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Serilog;
 
 namespace WebAPI.Controllers
@@ -21,9 +24,9 @@ namespace WebAPI.Controllers
         /// <summary>
         /// Add product to the order, you must be authenticated 
         /// </summary>
-        /// <response code="201">All OK</response>
-        /// <response code="400">Wrong params format</response>
-        /// <response code="500">Oops!</response>
+        /// <response code="201">Product has been added to order</response>
+        /// <response code="400">Product has not been added</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> AddProductToOrder([Required] int productId, [Required] int amount)
@@ -31,7 +34,9 @@ namespace WebAPI.Controllers
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
             var order = await _ordersService.AddProductToOrderAsync(userId, productId, amount);
 
-            return order;
+            return order is null 
+                ? BadRequest(Messages.NotCompleted) 
+                : Created(new Uri(Request.GetDisplayUrl()), order);
         }
 
         /// <summary>
@@ -39,8 +44,7 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <response code="201">All OK</response>
         /// <response code="204">Not found</response>
-        /// <response code="400">Wrong params format</response>
-        /// <response code="500">Oops!</response>
+        /// <response code="401">Unauthorized</response>
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> GetProductsOfOrder(int orderId = 0)
@@ -56,16 +60,15 @@ namespace WebAPI.Controllers
                 order = await _ordersService.GetProductsOfOrderAsync(orderId);
             }
 
-            return order;
+            return order is null ? NotFound() : order;
         }
 
         /// <summary>
         /// Update products of the order, you must be authenticated 
         /// </summary>
         /// <response code="201">All OK</response>
-        /// <response code="204">Not found</response>
-        /// <response code="400">Wrong params format</response>
-        /// <response code="500">Oops!</response>
+        /// <response code="400">Not Completed!</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> UpdateProductsOfOrder([FromForm][Required] OrderItemDTO orderItemDto)
@@ -73,15 +76,16 @@ namespace WebAPI.Controllers
             var userId = UserHelpers.GetUserIdByClaim(User.Claims);
             var order = await _ordersService.UpdateProductsOfOrderAsync(userId, orderItemDto);
 
-            return order;
+            return order is null 
+                ? BadRequest(Messages.NotCompleted) 
+                : Created(new Uri(Request.GetDisplayUrl()), order);
         }
 
         /// <summary>
         /// Delete product from the order, you must be authenticated 
         /// </summary>
-        /// <response code="201">All OK</response>
-        /// <response code="400">Wrong params format</response>
-        /// <response code="500">Oops!</response>
+        /// <response code="204">All OK</response>
+        /// <response code="401">Unauthorized</response>
         [HttpDelete]
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> DeleteProductsFromOrder([Required] int productId)
@@ -95,9 +99,8 @@ namespace WebAPI.Controllers
         /// <summary>
         /// Add product to the order, you must be authenticated 
         /// </summary>
-        /// <response code="201">All OK</response>
-        /// <response code="400">Wrong params format</response>
-        /// <response code="500">Oops!</response>
+        /// <response code="204">Products have been paid</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost("buy")]
         [Authorize]
         public async Task<ActionResult<OrderOutputDTO>> BuyProducts()

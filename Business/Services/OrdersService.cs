@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
@@ -99,10 +97,6 @@ namespace Business.Services
         private async Task<Order> GetUserOrderAsync(string userId)
         {
             var order = await _orderRepo.GetUnpaidUserOrderAsync(userId);
-            if (order is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, "Product is paid");
-            }
 
             return order;
         }

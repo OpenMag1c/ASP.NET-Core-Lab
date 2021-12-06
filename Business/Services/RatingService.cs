@@ -26,7 +26,7 @@ namespace Business.Services
             var product = await _productRepo.GetProductWithDetailsAsync(productId);
             if (product is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+                return null;
             }
 
             var productRating = product.Ratings.FirstOrDefault(rate => rate.UserId == int.Parse(userId));
@@ -51,24 +51,25 @@ namespace Business.Services
             return productOutputDto;
         }
 
-        public async Task DeleteRatingAsync(string userId, int productId)
+        public async Task<bool> DeleteRatingAsync(string userId, int productId)
         {
             var product = await _productRepo.GetProductWithDetailsAsync(productId);
             if (product is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+                return false;
             }
 
             var ratings = product.Ratings;
             var productRating = ratings.FirstOrDefault(rating => rating.UserId == int.Parse(userId));
             if (productRating is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.NotCompleted);
+                return false;
             }
 
             ratings.Remove(productRating);
             await _productRepo.SaveAsync();
             await RecalculateTotalRating(product);
+            return true;
         }
 
         public async Task RecalculateTotalRating(Product product)

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +37,7 @@ namespace Business.Services
             var result = await _userManager.UpdateAsync(newUser);
             if (!result.Succeeded)
             {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+                return await Task.FromResult<UserDTO>(null);
             }
 
             _cachingUserData.RemoveCacheData(userId);
@@ -54,7 +52,7 @@ namespace Business.Services
             var isRightPassword = await _userManager.CheckPasswordAsync(user, oldPassword);
             if (user is null || !isRightPassword)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.WrongPassword);
+                return false;
             }
 
             await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
@@ -74,7 +72,7 @@ namespace Business.Services
                 }
                 else
                 {
-                    throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
+                    return await Task.FromResult<UserDTO>(null);
                 }
             }
 

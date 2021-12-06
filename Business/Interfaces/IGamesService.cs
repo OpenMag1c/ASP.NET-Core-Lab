@@ -9,7 +9,7 @@ namespace Business.Interfaces
     public interface IGamesService
     {
         public Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto);
-        public Task DeleteProductAsync(int id);
+        public Task<bool> DeleteProductAsync(int id);
         public Task<ProductOutputDTO> FindProductByIdAsync(int id);
         public Task<IEnumerable<ProductOutputDTO>> GetProductsAsync(Pagination pagination, ProductFilters filters);
         public Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync();

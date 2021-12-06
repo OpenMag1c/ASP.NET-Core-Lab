@@ -1,10 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -33,14 +30,14 @@ namespace Business.Services
             var user = await _userManager.FindByEmailAsync(userCredentialsDto.Email);
             if (user is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.WrongEmail);
+                return null;
             }
 
             var isRightPassword = await _userManager.CheckPasswordAsync(user, userCredentialsDto.Password);
             var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
             if (!isRightPassword && !isEmailConfirmed)
             {
-                throw new HttpStatusException(HttpStatusCode.Unauthorized, Messages.WrongPasswordOrEmail);
+                return null;
             }
 
             var token = await _jwtGenerator.GenerateJwtTokenAsync(user);
@@ -51,11 +48,6 @@ namespace Business.Services
         public async Task<bool> SignUpAsync(UserCredentialsDTO userCredentialsDto)
         {
             var user = _mapper.Map<User>(userCredentialsDto);
-            if (user is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
-            }
-
             var result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded)
             {
@@ -69,7 +61,7 @@ namespace Business.Services
                 return true;
             }
 
-            throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
+            return false;
         }
 
         public async Task<bool> ConfirmEmailAsync(int id, string token)
@@ -80,7 +72,7 @@ namespace Business.Services
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.UserNotFound);
+                return false;
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, tokenDecodedString);

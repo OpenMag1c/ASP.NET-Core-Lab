@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Helper;
 using Business.Interfaces;
 using Business.Models;
@@ -72,8 +70,6 @@ namespace Business.Services
 
         public async Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync()
         {
-            throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
-
             var products = await _productRepo.GetAllProductsAsync();
             var sortedProducts =
                 products.GroupBy(product => product.Platform)
@@ -98,11 +94,6 @@ namespace Business.Services
                     .Take(limit)
                     .Select(prod => _mapper.Map<ProductOutputDTO>(prod));
 
-            if (neededProducts is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
-            }
-
             return neededProducts;
         }
 
@@ -111,7 +102,7 @@ namespace Business.Services
             var product = await _productRepo.GetProductByIdAsync(id);
             if (product is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+                return null;
             }
 
             var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
@@ -136,7 +127,7 @@ namespace Business.Services
             var product = products.FirstOrDefault(product => product.Name == productInputDto.Name);
             if (product is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+                return null;
             }
 
             product = _mapper.Map(productInputDto, product);
@@ -148,16 +139,18 @@ namespace Business.Services
             return resultDto;
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task<bool> DeleteProductAsync(int id)
         {
             var product = await _productRepo.GetProductByIdAsync(id);
             if (product is null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
+                return false;
             }
 
             _productRepo.Delete(product);
             await _productRepo.SaveAsync();
+
+            return true;
         }
 
         private async Task UploadProductImagesAsync(ProductInputDTO productInputDto, Product product)

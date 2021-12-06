@@ -9,58 +9,51 @@
             Authorization by email and password
             </summary>
             <response code="200">Authorized</response>
-            <response code="400">Wrong params format</response>
             <response code="401">Unauthorized</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.AuthController.SignUp(Business.DTO.UserCredentialsDTO)">
             <summary>
             Registration by email and password
             </summary>
-            <response code="200">Registration completed</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="201">Registration completed</response>
+            <response code="400">Registration not completed</response>
         </member>
         <member name="M:WebAPI.Controllers.AuthController.ConfirmEmail(System.Int32,System.String)">
             <summary>
             Email confirmation
             </summary>
-            <response code="200">Registration completed</response>
             <response code="204">Email confirmed</response>
-            <response code="400">Email unconfirmed</response>
-            <response code="500">Oops!</response>
+            <response code="400">Unsuccessful email confirmation</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.GetTopPlatforms">
             <summary>
             Represent three top platforms by number of games
             </summary>
             <response code="200">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="404">No products were found</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.SearchProducts(System.String,System.Int32,System.Int32)">
             <summary>
             Search products by name
             </summary>
             <response code="200">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="404">No products were found</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.FindProductById(System.Int32)">
             <summary>
             Find product by Id
             </summary>
             <response code="200">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="404">Зroduct not found</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.AddProduct(Business.DTO.ProductInputDTO)">
             <summary>
             Add product, only for admin
             </summary>
             <response code="201">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="400">Not Completed</response>
+            <response code="401">Unauthorized</response>
+            <response code="403">No access</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.UpdateProduct(Business.DTO.ProductInputDTO)">
             <summary>
@@ -70,43 +63,37 @@
             <response code="400">Wrong params format</response>
             <response code="401">Unauthorized</response>
             <response code="403">No access</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.DeleteProduct(System.Int32)">
             <summary>
             Delete product, only for admin
             </summary>
             <response code="204">Product deleted</response>
-            <response code="400">Wrong params format</response>
             <response code="401">Unauthorized</response>
             <response code="403">No access</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.EditRating(System.Int32,System.Int32)">
             <summary>
             Edit product rating, you must be authenticated 
             </summary>
-            <response code="201">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="201">Rating has been created</response>
+            <response code="400">Not Completed</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.DeleteRating(System.Int32)">
             <summary>
             Delete product rating, you must be authenticated 
             </summary>
-            <response code="204">Rating deleted</response>
-            <response code="400">Wrong params format</response>
+            <response code="204">Rating has been deleted</response>
+            <response code="400">Not completed</response>
             <response code="401">Unauthorized</response>
-            <response code="403">No access</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.GamesController.GetProducts(Business.Models.Pagination,Business.Models.ProductFilters)">
             <summary>
             Get products with sorting and filtering
             </summary>
             <response code="200">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="404">No products were found</response>
         </member>
         <member name="M:WebAPI.Controllers.HomeController.GetInfo">
             <summary>
@@ -115,15 +102,14 @@
             <response code="200">All OK</response>
             <response code="401">Unauthorized</response>
             <response code="403">Access denied</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.OrdersController.AddProductToOrder(System.Int32,System.Int32)">
             <summary>
             Add product to the order, you must be authenticated 
             </summary>
-            <response code="201">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="201">Product has been added to order</response>
+            <response code="400">Product has not been added</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.OrdersController.GetProductsOfOrder(System.Int32)">
             <summary>
@@ -131,61 +117,53 @@
             </summary>
             <response code="201">All OK</response>
             <response code="204">Not found</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.OrdersController.UpdateProductsOfOrder(Business.DTO.OrderItemDTO)">
             <summary>
             Update products of the order, you must be authenticated 
             </summary>
             <response code="201">All OK</response>
-            <response code="204">Not found</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="400">Not Completed!</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.OrdersController.DeleteProductsFromOrder(System.Int32)">
             <summary>
             Delete product from the order, you must be authenticated 
             </summary>
-            <response code="201">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="204">All OK</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.OrdersController.BuyProducts">
             <summary>
             Add product to the order, you must be authenticated 
             </summary>
-            <response code="201">All OK</response>
-            <response code="400">Wrong params format</response>
-            <response code="500">Oops!</response>
+            <response code="204">Products have been paid</response>
+            <response code="401">Unauthorized</response>
         </member>
         <member name="M:WebAPI.Controllers.UserController.UpdateProfile(Business.DTO.UserDTO)">
             <summary>
             Update user profile by model
             </summary>
             <response code="200">Profile updated</response>
-            <response code="400">Wrong params format</response>
+            <response code="400">Profile has not been updated</response>
             <response code="401">Unauthorized</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.UserController.ChangeProfilePassword(System.String,System.String)">
             <summary>
             Update user password
             </summary>
-            <response code="200">Profile updated</response>
             <response code="204">Profile password updated</response>
             <response code="400">Wrong params format</response>
             <response code="401">Unauthorized</response>
-            <response code="500">Oops!</response>
         </member>
         <member name="M:WebAPI.Controllers.UserController.GetProfileInfo">
             <summary>
             Represent user info
             </summary>
             <response code="200">All OK</response>
-            <response code="400">Wrong params format</response>
             <response code="401">Unauthorized</response>
-            <response code="500">Oops!</response>
+            <response code="404">User not found</response>
         </member>
     </members>
 </doc>

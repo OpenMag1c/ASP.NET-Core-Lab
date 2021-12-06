@@ -24,7 +24,6 @@ namespace WebAPI.Controllers
         /// <response code="200">All OK</response>
         /// <response code="401">Unauthorized</response>
         /// <response code="403">Access denied</response>
-        /// <response code="500">Oops!</response>
         [HttpGet("GetInfo")]
         [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<string>> GetInfo()
