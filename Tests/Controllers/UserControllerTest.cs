@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Business.DTO;
+﻿using Business.DTO;
 using Business.Interfaces;
 using FakeItEasy;
 using System.Threading.Tasks;
@@ -29,7 +28,6 @@ namespace WebAPI.Tests.Controllers
 
             // Assert
             Assert.IsType<UserDTO>(actionResult.Value);
-            Assert.IsType<OkObjectResult>(actionResult.Result);
         }
 
         [Fact]

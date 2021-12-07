@@ -1,9 +1,7 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
@@ -26,7 +24,7 @@ namespace Business.Services
             var product = await _productRepo.GetProductWithDetailsAsync(productId);
             if (product is null)
             {
-                return null;
+                return await Task.FromResult<ProductOutputDTO>(null);
             }
 
             var productRating = product.Ratings.FirstOrDefault(rate => rate.UserId == int.Parse(userId));

@@ -102,7 +102,7 @@ namespace Business.Services
             var product = await _productRepo.GetProductByIdAsync(id);
             if (product is null)
             {
-                return null;
+                return await Task.FromResult<ProductOutputDTO>(null);
             }
 
             var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
@@ -127,7 +127,7 @@ namespace Business.Services
             var product = products.FirstOrDefault(product => product.Name == productInputDto.Name);
             if (product is null)
             {
-                return null;
+                return await Task.FromResult<ProductOutputDTO>(null);
             }
 
             product = _mapper.Map(productInputDto, product);

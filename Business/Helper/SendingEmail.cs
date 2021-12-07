@@ -4,9 +4,9 @@ using MimeKit;
 
 namespace Business.Services
 {
-    public class EmailService
+    public class SendingEmail
     {
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public virtual async Task SendEmailAsync(string email, string subject, string message)
         {
             var emailMessage = new MimeMessage();
 

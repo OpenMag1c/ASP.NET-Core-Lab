@@ -17,9 +17,9 @@ namespace WebAPI.Infrastructure
         {
             services.AddControllers();
             services.AddSingleton(Log.Logger);
-            services.AddScoped<EmailService>();
             services.AddScoped<ImagesUrls>();
 
+            services.AddTransient<SendingEmail>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
