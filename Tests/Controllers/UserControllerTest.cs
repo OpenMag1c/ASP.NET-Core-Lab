@@ -122,7 +122,7 @@ namespace WebAPI.Tests.Controllers
             var fakeUserService = A.Fake<IUserService>();
             var userController = new UserController(null, fakeUserService).WithTestUser();
 
-            A.CallTo(() => fakeUserService.GetProfileInfoAsync(A<string>.Ignored))
+            A.CallTo(() => fakeUserService.GetProfileInfoAsync(null)).WithAnyArguments()
                 .Returns(Task.FromResult(new UserDTO()));
 
             // Act
@@ -139,7 +139,7 @@ namespace WebAPI.Tests.Controllers
             var fakeUserService = A.Fake<IUserService>();
             var userController = new UserController(null, fakeUserService).WithTestUser();
 
-            A.CallTo(() => fakeUserService.GetProfileInfoAsync(A<string>.Ignored))
+            A.CallTo(() => fakeUserService.GetProfileInfoAsync(null)).WithAnyArguments()
                 .Returns(Task.FromResult<UserDTO>(null));
 
             // Act
