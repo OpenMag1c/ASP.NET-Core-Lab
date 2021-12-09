@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace Business.DTO
 {
@@ -18,6 +17,7 @@ namespace Business.DTO
         /// </summary> 
         /// <example>Minsk, BNTU 1/1</example>
         [Required]
+        [StringLength(25)]
         public string AddressDelivery { get; set; }
 
         /// <summary> 

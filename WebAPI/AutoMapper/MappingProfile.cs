@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Business.DTO;
 using DAL.Models;
 
@@ -19,7 +20,19 @@ namespace WebAPI.AutoMapper
             CreateMap<Product, ProductOutputDTO>()
                 .ForMember(dest => dest.Platform, source => source.MapFrom(source => source.Platform.ToString()))
                 .ForMember(dest => dest.Genre, source => source.MapFrom(source => source.Genre.ToString()))
-                .ForMember(dest => dest.Rating, source => source.MapFrom(source => $"{(int)source.Rating}+"));
+                .ForMember(dest => dest.Rating, source => source.MapFrom(source => $"{(int) source.Rating}+"));
+            CreateMap<Order, OrderOutputDTO>()
+                .ForMember(dest => dest.Id, source => source.MapFrom(source => source.Id))
+                .ForMember(dest => dest.CreationDate, source => source.MapFrom(source => source.CreationDate))
+                .ForMember(dest => dest.OrderItems,
+                    source => source
+                        .MapFrom(source => source.OrderItems.Select(order => new OrderItemDTO()
+                        {
+                            ProductId = order.ProductId,
+                            Amount = order.Amount
+                        })));
+            CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
         }
     }
 }

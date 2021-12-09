@@ -18,27 +18,28 @@ namespace Business.Services
 {
     public class GamesService : IGamesService
     {
-        private readonly IRepositoryBase<Product> _productRepo;
+        private readonly IProductRepository _productRepo;
         private readonly IMapper _mapper;
         private readonly Cloudinary _cloudinary;
 
-        public GamesService(IRepositoryBase<Product> productRepo, IMapper mapper, Cloudinary cloudinary)
+        public GamesService(IProductRepository productRepo, IMapper mapper, Cloudinary cloudinary)
         {
             _productRepo = productRepo;
             _mapper = mapper;
             _cloudinary = cloudinary;
         }
 
-        public IEnumerable<ProductOutputDTO> GetProducts(Pagination pagination, ProductFilters filters)
+        public async Task<IEnumerable<ProductOutputDTO>> GetProductsAsync(Pagination pagination, ProductFilters filters)
         {
-            var products = _productRepo.FindAll(false);
+            var products = await _productRepo.GetAllProductsAsync();
             products = FilterProducts(products, filters);
-            var pagedList = PagedProducts<Product>.ToPagedList(products, pagination.PageNumber, pagination.PageSize);
-            var result = pagedList.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            var pagedProducts = PagedProducts<Product>.ToPagedEnumerable(products, pagination.PageNumber, pagination.PageSize);
+            var result = pagedProducts.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            
             return result;
         }
 
-        private IQueryable<Product> FilterProducts(IQueryable<Product> products, ProductFilters filters)
+        private static IEnumerable<Product> FilterProducts(IEnumerable<Product> products, ProductFilters filters)
         {
             var genre = filters.FilterByGenre;
             var age = filters.FilterByAge;
@@ -69,9 +70,9 @@ namespace Business.Services
             return products;
         }
 
-        public IEnumerable<PlatformDTO> GetTopThreePlatforms()
+        public async Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync()
         {
-            var products = _productRepo.FindAll(false).ToArray();
+            var products = await _productRepo.GetAllProductsAsync();
             var sortedProducts =
                 products.GroupBy(product => product.Platform)
                     .OrderByDescending(productGroupingItem => productGroupingItem.Count())
@@ -85,14 +86,9 @@ namespace Business.Services
             return sortedProducts;
         }
 
-        public IEnumerable<ProductOutputDTO> SearchProductsByTerm(string term, int limit, int offset)
+        public async Task<IEnumerable<ProductOutputDTO>> SearchProductsByTermAsync(string term, int limit, int offset)
         {
-            if (term is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
-            var products = _productRepo.FindAll(false).ToArray();
+            var products = await _productRepo.GetAllProductsAsync();
             term = term.ToLower();
             var neededProducts = 
                 products.Where(prod => prod.Name.ToLower().Contains(term))
@@ -108,85 +104,58 @@ namespace Business.Services
             return neededProducts;
         }
 
-        public ProductOutputDTO FindProductById(int id)
+        public async Task<ProductOutputDTO> FindProductByIdAsync(int id)
         {
-            if (id <= 0)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
-            var products = _productRepo.FindAll(false).ToArray();
-            var neededProduct = products.FirstOrDefault(prod => prod.Id == id);
-            if (neededProduct is null)
+            var product = await _productRepo.GetProductByIdAsync(id);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var productOutputDto = _mapper.Map<ProductOutputDTO>(neededProduct);
+            var productOutputDto = _mapper.Map<ProductOutputDTO>(product);
 
             return productOutputDto;
         }
 
         public async Task<ProductOutputDTO> AddProductAsync(ProductInputDTO productInputDto)
         {
-            if (productInputDto is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
-            var newProduct = _mapper.Map<Product>(productInputDto);
-            _productRepo.Create(newProduct);
-            await UploadProductImagesAsync(productInputDto, newProduct);
-            if (newProduct is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.NotCompleted);
-            }
-
-            _productRepo.Save();
-            var resultDto = _mapper.Map<ProductOutputDTO>(newProduct);
+            var product = _mapper.Map<Product>(productInputDto);
+            _productRepo.Create(product);
+            await UploadProductImagesAsync(productInputDto, product);
+            await _productRepo.SaveAsync();
+            var resultDto = _mapper.Map<ProductOutputDTO>(product);
 
             return resultDto;
         }
 
         public async Task<ProductOutputDTO> UpdateProductAsync(ProductInputDTO productInputDto)
         {
-            if (productInputDto is null)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
-            var products = _productRepo.FindAll(true).ToArray();
-            var oldProduct = products.FirstOrDefault(prod => prod.Name == productInputDto.Name);
-            if (oldProduct is null)
+            var products = await _productRepo.GetAllProductsAsync();
+            var product = products.FirstOrDefault(product => product.Name == productInputDto.Name);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            var newProduct = _mapper.Map(productInputDto, oldProduct);
-            await UploadProductImagesAsync(productInputDto, newProduct);
-            _productRepo.Update(newProduct);
-            _productRepo.Save();
-            var resultDto = _mapper.Map<ProductOutputDTO>(newProduct);
+            product = _mapper.Map(productInputDto, product);
+            await UploadProductImagesAsync(productInputDto, product);
+            _productRepo.Update(product);
+            await _productRepo.SaveAsync();
+            var resultDto = _mapper.Map<ProductOutputDTO>(product);
 
             return resultDto;
         }
 
-        public void DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            if (id <= 0)
-            {
-                throw new HttpStatusException(HttpStatusCode.BadRequest, Messages.WrongInputData);
-            }
-
-            var products = _productRepo.FindAll(true).ToArray();
-            var deletedProduct = products.FirstOrDefault(prod => prod.Id == id);
-            if (deletedProduct is null)
+            var product = await _productRepo.GetProductByIdAsync(id);
+            if (product is null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, Messages.ProductNotFound);
             }
 
-            _productRepo.Delete(deletedProduct);
-            _productRepo.Save();
+            _productRepo.Delete(product);
+            await _productRepo.SaveAsync();
         }
 
         private async Task UploadProductImagesAsync(ProductInputDTO productInputDto, Product product)

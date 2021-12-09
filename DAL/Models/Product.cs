@@ -18,7 +18,6 @@ namespace DAL.Models
         public double Price { get; set; }
         public int Count { get; set; }
         public ICollection<ProductRating> Ratings { get; set; }
-
         public Product()
         {
             Ratings = new List<ProductRating>();
