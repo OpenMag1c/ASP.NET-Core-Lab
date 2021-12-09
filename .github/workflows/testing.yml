@@ -5,10 +5,12 @@ on:
     branches: 
       -master
       -task16-CI
+      -task15
   pull_request:
     branches: 
       -master
       -task16-CI
+      -task15
   workflow_dispatch:
 
 jobs:
