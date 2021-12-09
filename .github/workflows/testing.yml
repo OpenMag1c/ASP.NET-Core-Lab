@@ -2,12 +2,16 @@ name: Action-Testing
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+      -master
+      -task16-CI
   pull_request:
-    branches: [ master ]
+    branches:  
+      -master
+      -task16-CI
 
 jobs:
-  build:
+  Build-Test:
 
     runs-on: ubuntu-latest
 
@@ -21,5 +25,5 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
+    - name: Testing application
       run: dotnet test --no-build --verbosity normal
