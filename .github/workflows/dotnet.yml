@@ -3,12 +3,10 @@ name: Action-Testing
 on:
   push:
     branches: 
-      -master
-      -task16
+      -origin/master
   pull_request:
     branches:
-      -master
-      -task16
+      -origin/master
   workflow_dispatch:
 
 jobs:
