@@ -1,6 +1,9 @@
 name: Action-Testing
 
-on: [push]
+on: 
+  push: 
+    branches:
+      - master
 
 jobs:
   build-test:
