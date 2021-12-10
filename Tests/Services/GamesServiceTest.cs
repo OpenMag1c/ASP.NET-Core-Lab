@@ -29,7 +29,7 @@ namespace WebAPI.Tests.Services
             var result = await gamesService.GetProductsAsync(pagination, filters);
 
             // Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
         }
 
         [Fact]
