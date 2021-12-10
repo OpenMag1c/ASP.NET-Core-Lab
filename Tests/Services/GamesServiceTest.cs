@@ -20,7 +20,7 @@ namespace WebAPI.Tests.Services
             var fakeProductRepo = A.Fake<IProductRepository>();
             var products = CreateEnumerable<Product>(10);
             var filters = new ProductFilters();
-            var pagination = new  Pagination();
+            var pagination = new Pagination();
             var gamesService = new GamesService(fakeProductRepo, Mapper, null);
             A.CallTo(() => fakeProductRepo.GetAllProductsAsync())
                 .Returns(Task.FromResult(products));
