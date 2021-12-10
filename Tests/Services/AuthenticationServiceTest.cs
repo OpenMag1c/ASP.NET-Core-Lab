@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using AutoFixture;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
 using Business.Interfaces;
@@ -7,35 +7,37 @@ using Business.Services;
 using DAL.Models;
 using FakeItEasy;
 using Microsoft.AspNetCore.Identity;
+using WebAPI.Tests.Extensions;
 using Xunit;
 
 namespace WebAPI.Tests.Services
 {
-    public class AuthenticationServiceTest
+    public class AuthenticationServiceTest : Tester
     {
         [Fact]
         public async Task SignInAsync_ReturnsToken()
         {
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
-            var token = "token";
             var fakeJwtGenerator = A.Fake<IJwtGenerator>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
-            var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, fakeJwtGenerator, A.Fake<SendingEmail>());
-            A.CallTo(() => fakeUserManager.FindByEmailAsync(A<string>.Ignored))
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
+            var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, fakeJwtGenerator,
+                A.Fake<SendingEmail>());
+            A.CallTo(() => fakeUserManager.FindByEmailAsync(null)).WithAnyArguments()
                 .Returns(Task.FromResult(new User()));
             A.CallTo(() => fakeUserManager.CheckPasswordAsync(A<User>.Ignored, A<string>.Ignored))
                 .Returns(Task.FromResult(true));
             A.CallTo(() => fakeUserManager.IsEmailConfirmedAsync(A<User>.Ignored))
                 .Returns(Task.FromResult(true));
             A.CallTo(() => fakeJwtGenerator.GenerateJwtTokenAsync(A<User>.Ignored))
-                .Returns(Task.FromResult(token));
+                .Returns(Task.FromResult(string.Empty));
 
             // Act
             var result = await authenticationService.SignInAsync(userCredentialsDto);
 
             // Assert
-            Assert.Equal(token, result);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -43,9 +45,10 @@ namespace WebAPI.Tests.Services
         {
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
             var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, A.Fake<IJwtGenerator>(), A.Fake<SendingEmail>());
-            A.CallTo(() => fakeUserManager.FindByEmailAsync(A<string>.Ignored))
+            A.CallTo(() => fakeUserManager.FindByEmailAsync(null)).WithAnyArguments()
                 .Returns(Task.FromResult<User>(null));
 
             // Act
@@ -60,7 +63,8 @@ namespace WebAPI.Tests.Services
         {
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
             var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, A.Fake<IJwtGenerator>(), A.Fake<SendingEmail>());
             A.CallTo(() => fakeUserManager.FindByEmailAsync(A<string>.Ignored))
                 .Returns(Task.FromResult(new User()));
@@ -81,7 +85,8 @@ namespace WebAPI.Tests.Services
         {
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
             var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, A.Fake<IJwtGenerator>(), A.Fake<SendingEmail>());
             A.CallTo(() => fakeUserManager.FindByEmailAsync(A<string>.Ignored))
                 .Returns(Task.FromResult(new User()));
@@ -103,7 +108,8 @@ namespace WebAPI.Tests.Services
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
             var fakeSendingEmail = A.Fake<SendingEmail>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
             var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, A.Fake<IJwtGenerator>(), fakeSendingEmail);
             A.CallTo(() => fakeUserManager.CreateAsync(A<User>.Ignored, A<string>.Ignored))
                 .Returns(Task.FromResult(IdentityResult.Success));
@@ -121,7 +127,8 @@ namespace WebAPI.Tests.Services
         {
             // Arrange
             var fakeUserManager = A.Fake<UserManager<User>>();
-            var userCredentialsDto = new Fixture().Create<UserCredentialsDTO>();
+            var user = CreateQueryable<User>().First();
+            var userCredentialsDto = Mapper.Map<UserCredentialsDTO>(user);
             var authenticationService = new AuthenticationService(A.Fake<IMapper>(), fakeUserManager, A.Fake<IJwtGenerator>(), A.Fake<SendingEmail>());
             A.CallTo(() => fakeUserManager.CreateAsync(A<User>.Ignored, A<string>.Ignored))
                 .Returns(Task.FromResult(IdentityResult.Failed()));

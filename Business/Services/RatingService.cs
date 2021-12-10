@@ -70,7 +70,7 @@ namespace Business.Services
             return true;
         }
 
-        public async Task RecalculateTotalRating(Product product)
+        private async Task RecalculateTotalRating(Product product)
         {
             var totalRating = (int)product.Ratings
                 .Average(rate => rate.Rating);
