@@ -48,7 +48,7 @@ namespace Business.Services
 
         public async Task<OrderOutputDTO> UpdateProductsOfOrderAsync(string userId, OrderItemDTO orderItemDto)
         {
-            var order = await _orderRepo.GetUserOrderAsync(userId);
+            var order = await _orderRepo.GetUnpaidUserOrderAsync(userId);
 
             var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == orderItemDto.ProductId);
@@ -66,7 +66,7 @@ namespace Business.Services
 
         public async Task DeleteProductsFromOrderAsync(string userId, int productId)
         {
-            var order = await GetUserOrderAsync(userId);
+            var order = await _orderRepo.GetUnpaidUserOrderAsync(userId);
 
             var currentOrderItem = order.OrderItems
                 .FirstOrDefault(orderItem => orderItem.ProductId == productId);
@@ -88,25 +88,19 @@ namespace Business.Services
 
         public async Task BuyProductsAsync(string userId)
         {
-            var order = await GetUserOrderAsync(userId);
+            var order = await _orderRepo.GetUnpaidUserOrderAsync(userId);
             order.IsPaid = true;
             _orderRepo.Update(order);
             await _orderRepo.SaveAsync();
         }
-
-        private async Task<Order> GetUserOrderAsync(string userId)
-        {
-            var order = await _orderRepo.GetUnpaidUserOrderAsync(userId);
-
-            return order;
-        }
-
+        
         private async Task<OrderOutputDTO> CreateOrUpdateOrder(Order currentOrder, OrderItem orderItem, string userId)
         {
             OrderOutputDTO orderDto;
             if (currentOrder is not null)
             {
                 currentOrder.OrderItems.Add(orderItem);
+                _orderRepo.Update(currentOrder);
                 orderDto = _mapper.Map<OrderOutputDTO>(currentOrder);
             }
             else
@@ -122,7 +116,6 @@ namespace Business.Services
                 orderDto = _mapper.Map<OrderOutputDTO>(order);
             }
 
-            _orderRepo.Update(currentOrder);
             await _orderRepo.SaveAsync();
 
             return orderDto;

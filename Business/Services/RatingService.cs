@@ -72,9 +72,18 @@ namespace Business.Services
 
         private async Task RecalculateTotalRating(Product product)
         {
-            var totalRating = (int)product.Ratings
-                .Average(rate => rate.Rating);
-            product.TotalRating = totalRating;
+            if (product.Ratings.Count == 0)
+            {
+                product.TotalRating = 0;
+            }
+            else
+            {
+                var totalRating = (int)product.Ratings
+                    .Average(rate => rate.Rating);
+                product.TotalRating = totalRating;
+
+            }
+
             _productRepo.Update(product);
             await _productRepo.SaveAsync();
         }

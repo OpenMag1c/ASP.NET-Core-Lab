@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        /// Add product to the order, you must be authenticated 
+        /// Buy the order, you must be authenticated 
         /// </summary>
         /// <response code="204">Products have been paid</response>
         /// <response code="401">Unauthorized</response>
