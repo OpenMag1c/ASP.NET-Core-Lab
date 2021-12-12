@@ -1,15 +1,9 @@
 name: Action-Testing
 
-on:
-  push:
-    branches: 
-      -master
-      -task16
-  pull_request:
+on: 
+  push: 
     branches:
-      -master
-      -task16
-  workflow_dispatch:
+      - master
 
 jobs:
   build-test:
