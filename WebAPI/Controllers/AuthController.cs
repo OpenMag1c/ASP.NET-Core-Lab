@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using WebAPI.Responses;
 
 namespace WebAPI.Controllers
 {

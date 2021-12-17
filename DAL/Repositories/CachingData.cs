@@ -1,8 +1,8 @@
 ﻿using System;
-using Business.Interfaces;
+using DAL.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Business.Helper
+namespace DAL.Repositories
 {
     public class CachingData<T> : ICachingData<T> where T : class
     {

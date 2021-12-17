@@ -5,8 +5,8 @@ using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
-using Business.ExceptionMiddleware;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Responses;
 
 namespace WebAPI.Controllers
 {

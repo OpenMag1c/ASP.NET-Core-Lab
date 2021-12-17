@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Business.DTO;
-using Business.ExceptionMiddleware;
 using Business.Helper;
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Serilog;
+using WebAPI.Responses;
 
 namespace WebAPI.Controllers
 {

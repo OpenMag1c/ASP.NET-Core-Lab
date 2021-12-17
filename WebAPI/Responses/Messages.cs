@@ -1,4 +1,4 @@
-﻿namespace Business.ExceptionMiddleware
+﻿namespace WebAPI.Responses
 {
     public static class Messages
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebAPI.ErrorResponse
+namespace WebAPI.Responses
 {
     public class ErrorResponse
     {

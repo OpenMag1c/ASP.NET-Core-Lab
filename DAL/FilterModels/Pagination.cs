@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Business.Models
+namespace DAL.FilterModels
 {
     public class Pagination
     {

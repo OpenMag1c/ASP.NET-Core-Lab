@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Business.DTO;
-using Business.Helper;
-using Business.Models;
+using DAL.FilterModels;
 
 namespace Business.Interfaces
 {

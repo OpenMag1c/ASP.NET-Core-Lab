@@ -3,14 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.DTO;
-using Business.Helper;
 using Business.Interfaces;
-using Business.Models;
+using DAL.Models;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using DAL.Enum;
 using DAL.Interfaces;
-using DAL.Models;
+using DAL.FilterModels;
 
 namespace Business.Services
 {
@@ -29,72 +27,32 @@ namespace Business.Services
 
         public async Task<IEnumerable<ProductOutputDTO>> GetProductsAsync(Pagination pagination, ProductFilters filters)
         {
-            var products = await _productRepo.GetAllProductsAsync();
-            products = FilterProducts(products, filters);
-            var pagedProducts = PagedProducts<Product>.ToPagedEnumerable(products, pagination.PageNumber, pagination.PageSize);
-            var result = pagedProducts.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            var products = await _productRepo.GetFilteredProductsAsync(filters, pagination);
+            var result = products.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
             
             return result;
         }
 
-        private static IEnumerable<Product> FilterProducts(IEnumerable<Product> products, ProductFilters filters)
-        {
-            var genre = filters.FilterByGenre;
-            var age = filters.FilterByAge;
-            if (genre != Genres.AllGenres)
-            {
-                products = products.Where(prod => prod.Genre == genre);
-            }
-
-            if (age != Ratings.AllAges)
-            {
-                products = products.Where(prod => prod.Rating >= age);
-            }
-
-            products = filters.SortByPrice switch
-            {
-                Sorting.Asc => products.OrderBy(prod => prod.Price),
-                Sorting.Desc => products.OrderByDescending(prod => prod.Price),
-                _ => products
-            };
-
-            products = filters.SortByRating switch
-            {
-                Sorting.Asc => products.OrderBy(prod => prod.TotalRating),
-                Sorting.Desc => products.OrderByDescending(prod => prod.TotalRating),
-                _ => products
-            };
-
-            return products;
-        }
-
         public async Task<IEnumerable<PlatformDTO>> GetTopThreePlatformsAsync()
         {
-            var products = await _productRepo.GetAllProductsAsync();
-            var sortedProducts =
-                products.GroupBy(product => product.Platform)
-                    .OrderByDescending(productGroupingItem => productGroupingItem.Count())
-                    .Take(3)
-                    .Select(productGroupingItem => new PlatformDTO()
-                    {
-                        Platform = productGroupingItem.Key.ToString(),
-                        Games = productGroupingItem.Select(product => product.Name)
-                    });
+            var topThreePlatforms = await _productRepo.GetTopThreePlatformProductsAsync();
+            var platformsDto = topThreePlatforms
+                .Select(platform => new PlatformDTO()
+                {
+                    Platform = platform.ToString(),
+                    Games = _productRepo.GetProductNamesByPlatformAsync(platform).Result
+                });
 
-            return sortedProducts;
+            return platformsDto;
         }
 
         public async Task<IEnumerable<ProductOutputDTO>> SearchProductsByTermAsync(string term, int limit, int offset)
         {
-            var products = await _productRepo.GetAllProductsAsync();
             term = term.ToLower();
-            var neededProducts = 
-                products.Where(prod => prod.Name.ToLower().Contains(term))
-                    .Skip(offset)
-                    .Take(limit)
-                    .Select(prod => _mapper.Map<ProductOutputDTO>(prod));
+            var neededProducts = await _productRepo.GetProductsByTermAsync(term, limit, offset);
+            var productsDto = neededProducts.Select(prod => _mapper.Map<ProductOutputDTO>(prod));
 
-            return neededProducts;
+            return productsDto;
         }
 
         public async Task<ProductOutputDTO> FindProductByIdAsync(int id)

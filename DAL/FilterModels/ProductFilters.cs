@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DAL.Enum;
 
-namespace Business.Models
+namespace DAL.FilterModels
 {
     public class ProductFilters
     {

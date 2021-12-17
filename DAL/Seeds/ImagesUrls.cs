@@ -1,24 +1,5 @@
-﻿using CloudinaryDotNet;
-
-namespace DAL.Database
+﻿namespace DAL.Seeds
 {
-    public class ImagesUrls
-    {
-        private readonly Cloudinary _cloudinary;
-
-        public ImagesUrls(Cloudinary cloudinary)
-        {
-            _cloudinary = cloudinary;
-        }
-
-        public string GetUrlImageLogo(string image)
-        {
-            string url = _cloudinary.Api.UrlImgUp.Transform(new CloudinaryDotNet.Transformation().Width(200).Height(300).Crop("fill")).BuildUrl("WebAPI/Logo/" + image);
-
-            return url;
-        }
-    }
-
     public static class ImagesLogo
     {
         public const string Horizon =

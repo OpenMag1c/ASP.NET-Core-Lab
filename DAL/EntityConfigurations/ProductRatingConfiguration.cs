@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DAL.Infrastructure
+namespace DAL.EntityConfigurations
 {
     public class ProductRatingConfiguration : IEntityTypeConfiguration<ProductRating>
     {

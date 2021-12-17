@@ -1,4 +1,4 @@
-﻿namespace Business.Interfaces
+﻿namespace DAL.Interfaces
 {
     public interface ICachingData<T> where T : class
     {

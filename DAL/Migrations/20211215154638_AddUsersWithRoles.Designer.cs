@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211123174429_AddOrders3")]
-    partial class AddOrders3
+    [Migration("20211215154638_AddUsersWithRoles")]
+    partial class AddUsersWithRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,7 +54,7 @@ namespace DAL.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -119,10 +119,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 50,
                             DateCreated = 2018,
-                            Genre = 0,
+                            Genre = 1,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Horizon_Zero_Dawn_mpnuy7.jpg",
                             Name = "Horizon Zero Dawn",
-                            Platform = 1,
+                            Platform = 2,
                             Price = 24.989999999999998,
                             Rating = 16,
                             TotalRating = 0
@@ -133,10 +133,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 100,
                             DateCreated = 2016,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Counter_Strike_tkkgm4.jpg",
                             Name = "Counter Strike GO",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 4.9900000000000002,
                             Rating = 18,
                             TotalRating = 0
@@ -147,10 +147,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 500,
                             DateCreated = 2017,
-                            Genre = 4,
+                            Genre = 5,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Brawl_Stars_jwhuv1.jpg",
                             Name = "Brawl Stars",
-                            Platform = 2,
+                            Platform = 3,
                             Price = 0.98999999999999999,
                             Rating = 7,
                             TotalRating = 0
@@ -161,10 +161,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 25,
                             DateCreated = 2020,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Half_Life_t0lcqj.jpg",
                             Name = "Half-Life VR",
-                            Platform = 4,
+                            Platform = 5,
                             Price = 29.989999999999998,
                             Rating = 18,
                             TotalRating = 0
@@ -175,10 +175,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background1.jpg",
                             Count = 90,
                             DateCreated = 2008,
-                            Genre = 6,
+                            Genre = 7,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Skyrim_b3rdpm.jpg",
                             Name = "TES V Skyrim",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 19.989999999999998,
                             Rating = 16,
                             TotalRating = 0
@@ -189,10 +189,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background3.jpg",
                             Count = 200,
                             DateCreated = 2015,
-                            Genre = 2,
+                            Genre = 3,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Clash_Royale_oipsjp.jpg",
                             Name = "Clash Royale",
-                            Platform = 2,
+                            Platform = 3,
                             Price = 0.98999999999999999,
                             Rating = 7,
                             TotalRating = 0
@@ -203,10 +203,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 75,
                             DateCreated = 2017,
-                            Genre = 5,
+                            Genre = 6,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Beat_Saber_ubvkuu.jpg",
                             Name = "Beat Saber",
-                            Platform = 4,
+                            Platform = 5,
                             Price = 5.9900000000000002,
                             Rating = 3,
                             TotalRating = 0
@@ -217,10 +217,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background5.jpg",
                             Count = 40,
                             DateCreated = 2011,
-                            Genre = 6,
+                            Genre = 7,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Terraria_uzjoxt.jpg",
                             Name = "Terraria",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 2.9900000000000002,
                             Rating = 12,
                             TotalRating = 0
@@ -231,10 +231,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 700,
                             DateCreated = 2020,
-                            Genre = 0,
+                            Genre = 1,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Genshin_Impact_x0fd6d.jpg",
                             Name = "Genshin Impact",
-                            Platform = 0,
+                            Platform = 1,
                             Price = 5.9900000000000002,
                             Rating = 7,
                             TotalRating = 0
@@ -245,10 +245,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background2.jpg",
                             Count = 999,
                             DateCreated = 2000,
-                            Genre = 3,
+                            Genre = 4,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Snake_toiezu.jpg",
                             Name = "Snake",
-                            Platform = 3,
+                            Platform = 4,
                             Price = 0.0,
                             Rating = 18,
                             TotalRating = 0
@@ -259,10 +259,10 @@ namespace DAL.Migrations
                             Background = "https://res.cloudinary.com/dvweto8rq/image/upload/v1637147617/WebAPI/Background/Background4.jpg",
                             Count = 120,
                             DateCreated = 2007,
-                            Genre = 1,
+                            Genre = 2,
                             Logo = "https://res.cloudinary.com/dvweto8rq/image/upload/w_150,h_100,c_fill/WebAPI/Logo/Contra_City_r3iefw.jpg",
                             Name = "Contra city",
-                            Platform = 3,
+                            Platform = 4,
                             Price = 4.9900000000000002,
                             Rating = 16,
                             TotalRating = 0
@@ -358,6 +358,23 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            Age = 0,
+                            ConcurrencyStamp = "1c2180b7-b18d-4c34-82e9-bef65aee8b7e",
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "_Aa123456",
+                            PhoneNumber = "375447400686",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -387,6 +404,22 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "b3f1ae36-838a-4c95-bcfe-84237f93cf6a",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConcurrencyStamp = "b6cc1b1e-d4ec-4d90-b26b-dec8742a8bee",
+                            Name = "user",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -469,6 +502,13 @@ namespace DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -503,15 +543,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.OrderItem", b =>
                 {
-                    b.HasOne("DAL.Models.Order", null)
+                    b.HasOne("DAL.Models.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DAL.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

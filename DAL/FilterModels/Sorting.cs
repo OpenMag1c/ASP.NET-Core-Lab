@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Business.Models
+namespace DAL.FilterModels
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Sorting

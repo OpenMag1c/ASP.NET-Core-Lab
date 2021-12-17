@@ -32,8 +32,6 @@ namespace WebAPI
 
             services.AddMemoryCache();
 
-            services.AddRazorPages();
-
             services.AddResponseCachingService();
 
             services.AddServicesCollection();
@@ -68,7 +66,6 @@ namespace WebAPI
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc");
-                endpoints.MapRazorPages();
             });
         }
     }

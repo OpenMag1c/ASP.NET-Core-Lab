@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Business.DTO;
-using Business.Models;
 using Business.Services;
+using DAL.Enum;
+using DAL.FilterModels;
 using DAL.Interfaces;
 using DAL.Models;
 using FakeItEasy;
@@ -22,7 +24,7 @@ namespace WebAPI.Tests.Services
             var filters = new ProductFilters();
             var pagination = new Pagination();
             var gamesService = new GamesService(fakeProductRepo, Mapper, null);
-            A.CallTo(() => fakeProductRepo.GetAllProductsAsync())
+            A.CallTo(() => fakeProductRepo.GetFilteredProductsAsync(filters, pagination))
                 .Returns(Task.FromResult(products));
 
             // Act
@@ -37,9 +39,9 @@ namespace WebAPI.Tests.Services
         {
             // Arrange
             var fakeProductRepo = A.Fake<IProductRepository>();
-            var products = CreateEnumerable<Product>(10);
+            var products = new List<IGrouping<Platforms, Product>>();
             var gamesService = new GamesService(fakeProductRepo, Mapper, null);
-            A.CallTo(() => fakeProductRepo.GetAllProductsAsync())
+            A.CallTo(() => fakeProductRepo.GetTopThreePlatformProductsAsync())
                 .Returns(Task.FromResult(products));
 
             // Act
@@ -56,7 +58,7 @@ namespace WebAPI.Tests.Services
             var fakeProductRepo = A.Fake<IProductRepository>();
             var products = CreateEnumerable<Product>(10);
             var gamesService = new GamesService(fakeProductRepo, Mapper, null);
-            A.CallTo(() => fakeProductRepo.GetAllProductsAsync())
+            A.CallTo(() => fakeProductRepo.GetProductsByTermAsync(A<string>.Ignored, A<int>.Ignored, A<int>.Ignored))
                 .Returns(Task.FromResult(products));
 
             // Act

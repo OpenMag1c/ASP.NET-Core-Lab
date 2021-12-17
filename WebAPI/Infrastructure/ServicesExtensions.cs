@@ -1,7 +1,5 @@
-﻿using Business.Helper;
-using Business.Interfaces;
+﻿using Business.Interfaces;
 using Business.Services;
-using DAL.Database;
 using DAL.Interfaces;
 using DAL.Models;
 using DAL.Repositories;
@@ -17,7 +15,6 @@ namespace WebAPI.Infrastructure
         {
             services.AddControllers();
             services.AddSingleton(Log.Logger);
-            services.AddScoped<ImagesUrls>();
 
             services.AddTransient<SendingEmail>();
             services.AddTransient<IProductRepository, ProductRepository>();

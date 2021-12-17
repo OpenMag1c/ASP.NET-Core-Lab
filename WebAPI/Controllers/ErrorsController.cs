@@ -2,15 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using WebAPI.Responses;
 
 namespace WebAPI.Controllers
 {
     [AllowAnonymous]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class ErrorsController : Controller
+    public class ErrorsController : ControllerBase
     {
         [Route("error")]
-        public ActionResult<ErrorResponse.ErrorResponse> Error()
+        public ActionResult<ErrorResponse> Error()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var exception = context.Error;
@@ -20,12 +22,12 @@ namespace WebAPI.Controllers
             {
                 code = (int)httpException.Status;
                 Response.StatusCode = code;
-                return new ErrorResponse.ErrorResponse(exception);
+                return new ErrorResponse(exception);
             }
 
             Response.StatusCode = code;
 
-            return View("~/Views/Error.cshtml");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 }

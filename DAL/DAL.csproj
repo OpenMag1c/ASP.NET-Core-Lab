@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DAO\" />
+    <Compile Remove="DAO\**" />
+    <EmbeddedResource Remove="DAO\**" />
+    <None Remove="DAO\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
 
